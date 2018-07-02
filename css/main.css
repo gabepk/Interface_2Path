@@ -1,0 +1,51 @@
+body {
+    margin: 0;
+    font-family: 'Lucida Sans';
+}
+
+.banner {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    overflow: hidden;
+    margin-bottom: -2px;
+}
+
+.banner img.logo2path  {
+    width: 60px;
+    height: 70px;
+    padding: 10px;
+}
+
+.banner img.grafo  {
+    height: 70px;
+    width: auto;
+}
+
+.navbar {
+    background: #4a696b;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    height: 40px;
+}
+
+.navbar a {
+    color: #fff;
+    padding: 2px 10px 2px 10px;
+    border-radius: 15px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-right: 10px;
+    font-size: 12px;
+    background: #4a696b;
+}
+
+.navbar a.chosen-menu {
+    text-shadow: 2px 2px #000;
+    color: #9fbebf;
+}
+
+.navbar img {
+    height: 61px;
+    margin-left: -1px;
+}
