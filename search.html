@@ -26,8 +26,56 @@
             </div>
         </header>
 
-        <!-- CONTENT -->
+        <style>
+            #search #search-side-menu .search-filters-1 {
+                position: absolute;
+                background: #eee;
+                display: flex;
+                flex-flow: column;
+                padding: 20px 10px;
+                box-shadow: 2px 2px 10px 0px #888;
+                z-index: 9;
+            }
+            #search #search-side-menu .search-filters-2 {
+                display: none;
+                position: absolute;
+                flex-flow: column;
+                background: #eee;
+                left: 190px;
+                padding: 20px 10px 20px 60px;
+                box-shadow: 2px 2px 10px 0px #888;
+            }
+        </style>
 
+        <div id="search">
+            <!-- SIDE MENU -->
+            <div id="search-side-menu">
+                <div class="search-filters-1">
+                    Choose one organism
+                    <input value="All Organisms" />
+                    <button @click="showSearchEnzyme">Search Enzyme</button>
+                    <button @click="showSearchPathway">Search Pathway</button>
+                </div>
+                <div id="search-enzyme-menu" class="search-filters-2">
+                        EC Number
+                        <input value="1.1.1.1" />
+                        <button>Search</button>
+                </div>
+                <div id="search-pathway-menu" class="search-filters-2">
+                        Origin Component
+                        <input value="ABC" />
+                        Final Component
+                        <input value="XYZ" />
+                        <button>Search</button>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
         <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
