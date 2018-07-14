@@ -23,14 +23,14 @@ var search = new Vue({
                 if (componente.length > 2) {
                     // Constroi query
                     var body = {};
-                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ '(?i).*" + 
-                        componente + ".*' RETURN c.compoundName LIMIT 20";
+                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" + 
+                        componente + ".*\" RETURN c.compoundName LIMIT 20";
 
                     // Busca componentes na API para autocomplete
                     axios.post("http://localhost:7474/db/data/cypher", body)
                     .then(response => {
                         for(var i=0; i<response.data.data.length; i++) {
-                            vm.componenteOrigemLista.push(response.data.data[i][0].data.compoundName);
+                            vm.componenteOrigemLista.push(response.data.data[i][0]);
                         }
                     }).catch(function(error) {
                         console.log(error);
@@ -47,14 +47,14 @@ var search = new Vue({
                 if (componente.length > 2) {
                     // Constroi query
                     var body = {};
-                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ '(?i).*" +
-                         componente + ".*' RETURN c.compoundName LIMIT 20";
+                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" +
+                         componente + ".*\" RETURN c.compoundName LIMIT 20";
 
                     // Busca componentes na API para autocomplete
                     axios.post("http://localhost:7474/db/data/cypher", body)
                     .then(response => {
                         for(var i=0; i<response.data.data.length; i++) {
-                            vm.componenteFinalLista.push(response.data.data[i][0].data.compoundName);
+                            vm.componenteFinalLista.push(response.data.data[i][0]);
                         }
                     }).catch(function(error) {
                         console.log(error);
@@ -104,41 +104,71 @@ var search = new Vue({
             document.getElementById("search-pathway-menu").style.display = "flex";
         },
         searchEnzyme() {
-            var vm = this;
+            // Constroi query
+            var body = {};
+            if (this.organismoSelecionado == 0) {
+                body["query"] = "MATCH (e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN e";
+            } else {
+                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado + 
+                    "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+            }
 
-            // Inicia busca
+            this.search(body)
+        },
+        searchPathway() {
+            /*if (!this.componenteOrigemFoiEscolhido) {
+                return;
+            } else if (!this.componenteFinalFoiEscolhido) {
+                return;
+            }*/
 
             // Constroi query
             var body = {};
             if (this.organismoSelecionado == 0) {
-                body["query"] = "MATCH (e:Enzyme) WHERE e.enzymeEC = '" + this.enzimaSelecionada + "'  RETURN e";
+                body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE c1.compoundName = \""
+                + this.componenteOrigemSelecionado + "\" AND c2.compoundName = \"" + this.componenteFinalSelecionado
+                + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             } else {
-                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = '" + this.organismoSelecionado + 
-                    "' AND e.enzymeEC = '" + this.enzimaSelecionada + "' RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
+                "t.taxId = \"" + this.organismoSelecionado + "\" AND c1.compoundName = \""
+                + this.componenteOrigemSelecionado + "\" AND c2.compoundName = \"" + this.componenteFinalSelecionado
+                + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             }
+
+            this.search(body)
+        },
+        search(body) {
+            var vm = this;
+
+            // Inicia busca
+
+            // Zera o grafico
+            graph.graphResult = {};
 
             axios.post("http://localhost:7474/db/data/cypher", body)
             .then(response => {
-                var nodesRaw = response.data.data[0][0];
-                var nodes = [];
-                for (var i=0; i<nodesRaw.length; i++) {
-                    nodes.push(nodesRaw[i].data);
-                }
+                if (response.data.data.length > 0) {
+                    var nodesRaw = response.data.data[0][0];
+                    var nodes = [];
+                    for (var i=0; i<nodesRaw.length; i++) {
+                        nodes.push(nodesRaw[i].data);
+                    }
 
-                var linksRaw = response.data.data[0][1];
-                var links = [];
-                for (var i=0; i<linksRaw.length; i++) {
-                    var link = {start: '', end: '', type: ''};
-                    var startURL = linksRaw[i].start.split("/");
-                    link.start = startURL[startURL.length - 1];
-                    var endURL = linksRaw[i].end.split("/");
-                    link.end = endURL[endURL.length - 1];
-                    link.type = linksRaw[i].type;
-                    links.push(link);
-                }
+                    var linksRaw = response.data.data[0][1];
+                    var links = [];
+                    for (var i=0; i<linksRaw.length; i++) {
+                        var link = {start: '', end: '', type: ''};
+                        var startURL = linksRaw[i].start.split("/");
+                        link.start = startURL[startURL.length - 1];
+                        var endURL = linksRaw[i].end.split("/");
+                        link.end = endURL[endURL.length - 1];
+                        link.type = linksRaw[i].type;
+                        links.push(link);
+                    }
 
-                // Atualiza grafico
-                graph.graphResult = {nodes: nodes, links: links};
+                    // Atualiza grafico
+                    graph.graphResult = {nodes: nodes, links: links};
+                }
 
             }).catch(function(error) {
                 console.log(error);
@@ -146,9 +176,6 @@ var search = new Vue({
             }).finally(function(){
                 // Termina busca
             });
-        },
-        searchPathway() {
-
         },
         selecionaComponenteOrigem(componente) {
             this.componenteOrigemSelecionado = componente;
