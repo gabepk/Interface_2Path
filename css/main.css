@@ -2,6 +2,9 @@ body {
     margin: 0;
     font-family: 'Lucida Sans';
 }
+p{
+    margin-left: 1%;
+}
 
 .banner {
     display: flex;
@@ -18,12 +21,12 @@ body {
 }
 
 .banner img.grafo  {
-    height: 70px;
+    height: 67px;
     width: auto;
 }
 
 .navbar {
-    background: #4a696b;
+    background: #00427e;
     flex-wrap: nowrap;
     justify-content: flex-start;
     height: 40px;
@@ -37,7 +40,7 @@ body {
     text-align: center;
     margin-right: 10px;
     font-size: 12px;
-    background: #4a696b;
+    background: #00427e;
 }
 
 .navbar a.chosen-menu {
