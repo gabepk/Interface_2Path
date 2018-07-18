@@ -26,87 +26,123 @@
 </header>
 
 <style>
-            #search #search-side-menu .search-filters-1 {
-                position: absolute;
-                background: #eee;
-                display: flex;
-                flex-flow: column;
-                padding: 20px 10px;
-                box-shadow: 2px 2px 10px 0px #888;
-                z-index: 9;
-            }
-            #search #search-side-menu .search-filters-2 {
-                display: none;
-                flex-flow: column;
-                background: #eee;
-                padding-top: 30px;
-            }
-            #search #search-side-menu .search-filters-2 div input {
-                width: 100%;
-            }
-            #search #search-side-menu .search-filters-2 ul {
-                list-style: none;
-                position: absolute;
-                background: #FFF;
-                overflow-y: auto;
-                z-index: 99;
-                border: 1px solid #aaa;
-                padding-left: 0px;
-                max-height: 200px;
-            }
-            
-            #search #search-side-menu .search-filters-2 ul li {
-                padding-left: 10px;
-            }
-            #search #search-side-menu .search-filters-2 ul li:hover {
-                background: #ccc;
-            }
+
+    body {
+        background: #eee;
+    }
+
+    #search .flex-row {
+        display: flex;
+        flex-flow: row nowrap;
+    }
+
+    #search #search-side-menu .search-filters-1,
+    #search #search-side-menu .search-filters-2 {
+        background: #fff;
+        display: flex;
+        flex-flow: column;
+        padding: 20px 10px;
+        margin: 8px;
+        box-shadow: 2px 2px 10px 0px #888;
+        z-index: 9;
+        min-height: 200px;
+        max-width: 300px;
+    }
+
+    #search #search-side-menu .search-filters-1 button,
+    #search #search-side-menu .search-filters-2 button {
+        margin-top: 10px;
+        background: #00427e;
+        color: #fff;
+        box-shadow: 1px 1px 3px #2671b5;
+        border: 0px;
+        border-radius: 10px;
+    }
+
+    #search #search-side-menu .search-filters-2 {
+        display: none;
+    }
+    #search #search-side-menu .search-filters-2 span.title {
+        margin-bottom: 10px;
+        font-size: 16px;
+        font-weight: bolder;
+        color: #00427e;
+    }
+
+    #search #search-side-menu .search-filters-2 span.label {
+        font-size: 12px;
+        line-height: 30px;
+        min-width: 40px;
+        text-align: end;
+        padding-right: 4px;
+    }
+    #search #search-side-menu .search-filters-2 div input {
+        margin-bottom: 8px;
+    }
+    #search #search-side-menu .search-filters-2 ul {
+        list-style: none;
+        position: absolute;
+        background: #FFF;
+        overflow-y: auto;
+        z-index: 99;
+        border: 1px solid #aaa;
+        padding-left: 0px;
+        max-height: 200px;
+    }
+    
+    #search #search-side-menu .search-filters-2 ul li {
+        padding-left: 10px;
+    }
+    #search #search-side-menu .search-filters-2 ul li:hover {
+        background: #ccc;
+    }
 
 </style>
 
 <div id="search">
-    <h1>2Path database search</h1>
     <!-- SIDE MENU -->
-    <div id="search-side-menu">
+    <div id="search-side-menu" class="flex-row">
         <div class="search-filters-1">
-            Choose the organism
+            <span class="title">Choose the organism</span>
             <select v-model="organismoSelecionado">
                 <option value="0">All Organisms</option>
                 <option v-for="organismo in organismoLista" v-bind:value="organismo.id">
                     {{ organismo.nome }}
                 </option>
             </select>
-            <button @click="showSearchEnzyme">Search Enzyme</button>
-            <button @click="showSearchPathway">Search Pathway</button>
-
-            <div id="search-enzyme-menu" class="search-filters-2">
-                <h4>SEARCHING <b>ENZIME</b></h4>
-                EC Number
-                <input placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
-                <button @click="searchEnzyme">Search</button>
+            <button @click="showSearchEnzyme">Search Enzyme →</button>
+            <button @click="showSearchPathway">Search Pathway →</button>
+        </div>
+        <div id="search-enzyme-menu" class="search-filters-2">
+            <span class="title">Search Enzyme</span>
+            <div class="flex-row">
+                <span class="label">EC:</span><input placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
             </div>
-            <div id="search-pathway-menu" class="search-filters-2">
-                <h4>SEARCHING <b>PATHWAY</b></h4>
-                <div>
-                    <span>From:</span><br/>
-                    <input placeholder="Origin Component" v-model="compostoOrigemSelecionado"/>
-                    <ul id="compostoOrigemLista">
-                        <li v-for="compostoOrigem in compostoOrigemLista"
-                            @click="selecionaCompostoOrigem(compostoOrigem)">{{compostoOrigem.compoundName}}
-                        </li>
-                    </ul>
+            <button @click="searchEnzyme">Search 🔎</button>
+        </div>
+        <div id="search-pathway-menu" class="search-filters-2">
+            <span class="title">Search Pathway</span>
+            <div>
+                <div class="flex-row">
+                    <span class="label">From:</span><input placeholder="Origin Component" v-model="compostoOrigemSelecionado"/>
                 </div>
-                <div>
-                    <span>To:</span><br/>
-                    <input placeholder="Final Component" v-model="compostoFinalSelecionado"/>
-                    <ul id="compostoFinalLista">
-                        <li v-for="compostoFinal in compostoFinalLista"
-                            @click="selecionaCompostoFinal(compostoFinal)">{{compostoFinal.compoundName}}
-                        </li>
-                    </ul>
-                </div>
-                <button @click="searchPathway">Search</button>
+                <ul id="compostoOrigemLista">
+                    <li v-for="compostoOrigem in compostoOrigemLista"
+                        @click="selecionaCompostoOrigem(compostoOrigem)">{{compostoOrigem.compoundName}}
+                    </li>
+                </ul>
             </div>
+            <div>
+                <div class="flex-row">
+                    <span class="label">To:</span><input placeholder="Final Component" v-model="compostoFinalSelecionado"/>
+                </div>
+                <ul id="compostoFinalLista">
+                    <li v-for="compostoFinal in compostoFinalLista"
+                        @click="selecionaCompostoFinal(compostoFinal)">{{compostoFinal.compoundName}}
+                    </li>
+                </ul>
+            </div>
+            <button @click="searchPathway">Search 🔎</button>
         </div>
     </div>
 

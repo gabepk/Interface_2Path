@@ -257,7 +257,7 @@ var search = new Vue({
         },
     },
     created() {
-        //axios.defaults.headers.common['Authorization'] = "Basic bmVvNGo6YWRtaW4=";
+        axios.defaults.headers.common['Authorization'] = "Basic bmVvNGo6YWRtaW4=";
         this.populaListaOrganismos();
     }
 });
