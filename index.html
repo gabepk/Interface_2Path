@@ -1,68 +1,73 @@
 <html>
-    <head>
-        <meta charset="UTF-8" name="viewport" http-equiv="Content-Type" content="width=device-width, initial-scale=1"/>
-        <link rel="shortcut icon" type="image/x-icon"
-		    href="img/favicon.ico" />
-        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
-        <link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@2.0.0-rc.11/dist/bootstrap-vue.css"/>
-        <link type="text/css" rel="stylesheet" href="css/main.css" />
-        <title>Home</title>
-    </head>
-    <body>
-        
-        <header id="app-nav">
-            <div class="banner">
-                <img class="logo2path" src="img/2pathlogo.png"/>
-                <img class="grafo" src="img/bioinfo.png"/>
-            </div>
-            <div>
-                <nav class="navbar">
-                    <a class="navbar-brand chosen-menu" href="#">Home</a>
-                    <a class="navbar-brand" href="search.html">Search</a>
-                    <a class="navbar-brand" href="help.html">Help</a>
-                </nav>
-            </div>
-        </header>
+<head>
+    <meta charset="UTF-8" name="viewport" http-equiv="Content-Type" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="img/favicon.ico"/>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="css/main.css"/>
+    <title>Home</title>
+</head>
+<body>
 
-        <!-- CONTENT -->
-        <h1>2Path</h1>
-		<p>2Path is a family of terpenoid metabolic network databases.</p>
-		<ul>
-			<li><a href="http://166.62.127.43:7777/browser/?cmd=play&arg=http://166.62.127.43:7775/html/2path.html">2Path</a> database integrates data from several repositories of plant metabolism, filtering for terpenoid data.</li>
-			<li><a href="https://bitbucket.org/wmcs/2path15">2Path15</a> is a graph modeled to store the generated networks for plant sesquiterpenes using a particular workflow for this task.</li>
-		</ul>
+<header id="app-nav">
+    <div class="banner">
+        <img class="logo2path" src="img/2pathlogo.png"/>
+        <img class="grafo" src="img/bioinfo.png"/>
+    </div>
+    <div>
+        <nav class="navbar">
+            <a class="navbar-brand chosen-menu" href="#">Home</a>
+            <a class="navbar-brand" href="search.html">Search</a>
+            <a class="navbar-brand" href="help.html">Help</a>
+        </nav>
+    </div>
+</header>
 
-		<h1>Terpenoids</h1>
-		<p>Terpenoids have critical ecological, industrial and commercial
-            relevance. Interactions as signaling for communication intra/inter
-            species, signal molecules to attract pollinating insects, or defense
-            against herbivores and microbes, are protagonized by terpenoids. Due
-            to their chemical composition, many terpenoids possess vast
-            pharmacological applicability in medicine and biotechnology. The
-            biosynthesis of terpenes has been widely studied over the years and
-            today it is known that they can be synthesized from two metabolic
-            pathways: Mevalonate pathway (MVA) and Non-mevalonate pathway (MEP).
-        </p>
+<!-- CONTENT -->
+<div class="container">
+    <h1>2Path</h1>
+    <p>2Path is a family of terpenoid metabolic network databases.</p>
+    <ul>
+        <li>2Path database integrates data from several repositories of plant metabolism, filtering for terpenoid
+            data.
+        </li>
+        <li><a href="https://bitbucket.org/wmcs/2path15">2Path15</a> is a graph modeled to store the generated networks
+            for plant sesquiterpenes using a particular workflow for this task.
+        </li>
+    </ul>
 
-		<h1>Publications</h1>
-		<a href="http://ieeexplore.ieee.org/document/7822709" target="_blank">2016
-		Silva, W., Vilar, D., Souza, D., Walter, M. E., Brígido, M., & Holanda, M. (2016, December). 2Path: A terpenoid metabolic network modeled as graph database. In Bioinformatics and Biomedicine (BIBM), 2016 IEEE International Conference on (pp. 1322-1327). IEEE.
-        </a>
-		<br />
-		<br />
-		<a href="http://www.inderscience.com/info/inarticle.php?artid=86103">
-        Silva, W. M. C. D., Vilar, D. J., Souza, D. D. S., Walter, M. E. M. T., Holanda, M. T. D., & Brígido, M. D. M. (2017). A terpenoid metabolic network modelled as graph database. International Journal of Data Mining and Bioinformatics, 18(1), 74-90.
-        </a>
-        <br/>
-        <br/>
-        <a href="https://link.springer.com/chapter/10.1007/978-3-319-77712-2_95">
-        Esteves, G., Silva, W., Walter, M. E., Brigido, M., & Lima, F. (2018, March). Human-Computer Interaction Communicability Evaluation Method Applied to Bioinformatics. In World Conference on Information Systems and Technologies (pp. 1001-1008). Springer, Cham.
-        </a>
-        <!--<a class="navbar-brand" href="about.html">View details</a>-->
-
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
-        <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-        <script src="js/main.js"></script>
-    </body>
+    <h1>Terpenoids</h1>
+    <p>Terpenoids have critical ecological, industrial and commercial
+        relevance. Interactions as signaling for communication intra/inter
+        species, signal molecules to attract pollinating insects, or defense
+        against herbivores and microbes, are protagonized by terpenoids. Due
+        to their chemical composition, many terpenoids possess vast
+        pharmacological applicability in medicine and biotechnology. The
+        biosynthesis of terpenes has been widely studied over the years and
+        today it is known that they can be synthesized from two metabolic
+        pathways: Mevalonate pathway (MVA) and Non-mevalonate pathway (MEP).
+    </p>
+    <h1>Publications</h1>
+    <a href="http://ieeexplore.ieee.org/document/7822709" target="_blank">2016
+        Silva, W., Vilar, D., Souza, D., Walter, M. E., Brígido, M., & Holanda, M. (2016, December). 2Path: A terpenoid
+        metabolic network modeled as graph database. In Bioinformatics and Biomedicine (BIBM), 2016 IEEE International
+        Conference on (pp. 1322-1327). IEEE.
+    </a>
+    <br/>
+    <br/>
+    <a href="http://www.inderscience.com/info/inarticle.php?artid=86103">
+        Silva, W. M. C. D., Vilar, D. J., Souza, D. D. S., Walter, M. E. M. T., Holanda, M. T. D., & Brígido, M. D. M.
+        (2017). A terpenoid metabolic network modelled as graph database. International Journal of Data Mining and
+        Bioinformatics, 18(1), 74-90.
+    </a>
+    <br/>
+    <br/>
+    <a href="https://link.springer.com/chapter/10.1007/978-3-319-77712-2_95">
+        Esteves, G., Silva, W., Walter, M. E., Brigido, M., & Lima, F. (2018, March). Human-Computer Interaction
+        Communicability Evaluation Method Applied to Bioinformatics. In World Conference on Information Systems and
+        Technologies (pp. 1001-1008). Springer, Cham.
+    </a>
+    <!--<a class="navbar-brand" href="about.html">View details</a>-->
+</div>
+</body>
 </html>
