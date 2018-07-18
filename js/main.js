@@ -1,60 +1,73 @@
+Vue.use(VAutocomplete.default)
+
 var search = new Vue({
     el: '#search',
     data: {
         organismoLista: [],
+        organismoListaFiltrada: [],
         organismoSelecionado: 0,
 
         enzimaLista: [],
         enzimaSelecionada: '',
 
-        componenteOrigemLista: [],
-        componenteOrigemSelecionado: '',
-        componenteOrigemFoiEscolhido: false,
+        compostoOrigemLista: [],
+        compostoOrigemSelecionado: '',
+        compostoOrigemFoiEscolhido: false,
 
-        componenteFinalLista: [],
-        componenteFinalSelecionado: '',
-        componenteFinalFoiEscolhido: false
+        compostoFinalLista: [],
+        compostoFinalSelecionado: '',
+        compostoFinalFoiEscolhido: false
     },
     watch: {
-        componenteOrigemSelecionado: function(componente, _) {
+        compostoOrigemSelecionado: function(composto, _) {
             var vm = this;
-            this.componenteOrigemLista = [];
-            if(!this.componenteOrigemFoiEscolhido) {
-                if (componente.length > 2) {
+            this.compostoOrigemLista = [];
+            if(!this.compostoOrigemFoiEscolhido) {
+                if (composto.length > 2) {
                     // Constroi query
                     var body = {};
                     body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" + 
-                        componente + ".*\" RETURN c.compoundName LIMIT 20";
+                    composto + ".*\" RETURN c LIMIT 20";
 
-                    // Busca componentes na API para autocomplete
+                    // Busca compostos na API para autocomplete
                     axios.post("http://localhost:7474/db/data/cypher", body)
                     .then(response => {
                         for(var i=0; i<response.data.data.length; i++) {
-                            vm.componenteOrigemLista.push(response.data.data[i][0]);
+                            var compostosRaw = response.data.data[i][0];
+                            if (compostosRaw) {
+                                var composto = compostosRaw.data;
+                                composto.id = compostosRaw.metadata.id;
+                                vm.compostoOrigemLista.push(composto);
+                            }
                         }
                     }).catch(function(error) {
                         console.log(error);
                     });
                 }
             } else {
-                this.componenteOrigemFoiEscolhido = false;
+                this.compostoOrigemFoiEscolhido = false;
             }
         },
-        componenteFinalSelecionado: function(componente, _) {
+        compostoFinalSelecionado: function(composto, _) {
             var vm = this;
-            this.componenteFinalLista = [];
-            if(!this.componenteFinalFoiEscolhido) {
-                if (componente.length > 2) {
+            this.compostoFinalLista = [];
+            if(!this.compostoFinalFoiEscolhido) {
+                if (composto.length > 2) {
                     // Constroi query
                     var body = {};
                     body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" +
-                         componente + ".*\" RETURN c.compoundName LIMIT 20";
+                    composto + ".*\" RETURN c LIMIT 20";
 
-                    // Busca componentes na API para autocomplete
+                    // Busca compostos na API para autocomplete
                     axios.post("http://localhost:7474/db/data/cypher", body)
                     .then(response => {
                         for(var i=0; i<response.data.data.length; i++) {
-                            vm.componenteFinalLista.push(response.data.data[i][0]);
+                            var compostosRaw = response.data.data[i][0];
+                            if (compostosRaw) {
+                                var composto = compostosRaw.data;
+                                composto.id = compostosRaw.metadata.id;
+                                vm.compostoFinalLista.push(composto);
+                            }
                         }
                     }).catch(function(error) {
                         console.log(error);
@@ -62,7 +75,7 @@ var search = new Vue({
                 }
             }
             else {
-                this.componenteFinalFoiEscolhido = false;
+                this.compostoFinalFoiEscolhido = false;
             }
         }
     },
@@ -78,7 +91,6 @@ var search = new Vue({
 
             axios.post("http://localhost:7474/db/data/cypher", body)
             .then(response => {
-                console.log(response.data);
                 var n = response.data.data.length;
 
                 vm.organismoLista = [];
@@ -88,6 +100,11 @@ var search = new Vue({
                     organismo.nome = response.data.data[i][1];
                     vm.organismoLista.push(organismo);
                 }
+
+                // Ordena lista de acordo com nome
+                vm.organismoLista.sort(function(o1, o2) {
+                    return o1.nome.localeCompare(o2.nome);
+                });
 
             }).catch(function(error) {
                 console.log(error);
@@ -107,7 +124,7 @@ var search = new Vue({
             // Constroi query
             var body = {};
             if (this.organismoSelecionado == 0) {
-                body["query"] = "MATCH (e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN e";
+                body["query"] = "MATCH q=(e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN DISTINCT(nodes(q)) as nodes";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado + 
                     "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
@@ -116,23 +133,26 @@ var search = new Vue({
             this.search(body)
         },
         searchPathway() {
-            /*if (!this.componenteOrigemFoiEscolhido) {
+            /*if (!this.compostoOrigemFoiEscolhido) {
                 return;
-            } else if (!this.componenteFinalFoiEscolhido) {
+            } else if (!this.compostoFinalFoiEscolhido) {
                 return;
             }*/
+
+            // FROM UDP; Uridine 5'-diphosphate
+            // TO Dihydrozeatin riboside
 
             // Constroi query
             var body = {};
             if (this.organismoSelecionado == 0) {
-                body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE c1.compoundName = \""
-                + this.componenteOrigemSelecionado + "\" AND c2.compoundName = \"" + this.componenteFinalSelecionado
-                + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+                body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
+                + this.compostoOrigemSelecionado + " AND ID(c2) = " + this.compostoFinalSelecionado
+                + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
-                "t.taxId = \"" + this.organismoSelecionado + "\" AND c1.compoundName = \""
-                + this.componenteOrigemSelecionado + "\" AND c2.compoundName = \"" + this.componenteFinalSelecionado
-                + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+                "t.taxId = \"" + this.organismoSelecionado + "\" AND ID(c1) = "
+                + this.compostoOrigemSelecionado + " AND ID(c2) = " + this.compostoFinalSelecionado
+                + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             }
 
             this.search(body)
@@ -142,49 +162,99 @@ var search = new Vue({
 
             // Inicia busca
 
-            // Zera o grafico
-            graph.graphResult = {};
-
             axios.post("http://localhost:7474/db/data/cypher", body)
             .then(response => {
+                var nodes = [];
+                var links = [];
+
                 if (response.data.data.length > 0) {
                     var nodesRaw = response.data.data[0][0];
-                    var nodes = [];
-                    for (var i=0; i<nodesRaw.length; i++) {
-                        nodes.push(nodesRaw[i].data);
+                    if (nodesRaw) {
+                        for (var i=0; i<nodesRaw.length; i++) {
+                            var node = nodesRaw[i].data;
+                            node.id = nodesRaw[i].metadata.id;
+                            node.label = nodesRaw[i].metadata.labels[0];
+                            nodes.push( vm.parseNode(node) );
+                        }
                     }
 
                     var linksRaw = response.data.data[0][1];
-                    var links = [];
-                    for (var i=0; i<linksRaw.length; i++) {
-                        var link = {start: '', end: '', type: ''};
-                        var startURL = linksRaw[i].start.split("/");
-                        link.start = startURL[startURL.length - 1];
-                        var endURL = linksRaw[i].end.split("/");
-                        link.end = endURL[endURL.length - 1];
-                        link.type = linksRaw[i].type;
-                        links.push(link);
+                    if(linksRaw) {
+                        for (var i=0; i<linksRaw.length; i++) {
+                            var link = {start: '', end: '', type: ''};
+                            var startURL = linksRaw[i].start.split("/");
+                            link.source = startURL[startURL.length - 1];
+                            var endURL = linksRaw[i].end.split("/");
+                            link.target = endURL[endURL.length - 1];
+                            link.type = linksRaw[i].type;
+                            link.id = linksRaw[i].metadata.id;
+                            links.push(link);
+                        }
                     }
-
-                    // Atualiza grafico
-                    graph.graphResult = {nodes: nodes, links: links};
                 }
+
+                // Atualiza grafico
+                graph_div.graph = {nodes: nodes, links: links};
 
             }).catch(function(error) {
                 console.log(error);
-                graph.graphResult = {};
+                graph_div.graph = {nodes: [], links: []};
             }).finally(function(){
                 // Termina busca
             });
         },
-        selecionaComponenteOrigem(componente) {
-            this.componenteOrigemSelecionado = componente;
-            this.componenteOrigemFoiEscolhido = true;
+        selecionaCompostoOrigem(composto) {
+            this.compostoOrigemSelecionado = composto.id;
+            this.compostoOrigemFoiEscolhido = true;
         },
-        selecionaComponenteFinal(componente) {
-            this.componenteFinalSelecionado = componente;
-            this.componenteFinalFoiEscolhido = true;
-        }
+        selecionaCompostoFinal(composto) {
+            this.compostoFinalSelecionado = composto.id;
+            this.compostoFinalFoiEscolhido = true;
+        },
+        parseNode(node) {
+            switch (node.label) {
+                case "Compound":
+                    node["name"] = node.compoundName;
+                    node["property_name"] = "compoundKEGG";
+                    node["property"] = node.compoundKEGG;
+                    node["property2_name"] = "compoundChebi";
+                    node["property2"] = node.compoundChebi;
+                    node["color"] = "#7f7";
+
+                    delete node.compoundName;
+                    delete node.compoundKEGG;
+                    delete node.compoundChebi;
+                    break;
+                case "Enzyme":
+                    node["name"] = node.enzymeName;
+                    node["property_name"] = "enzymeEC";
+                    node["property"] = node.enzymeEC;
+                    node["property2_name"] = "";
+                    node["property2"] = "";
+                    node["color"] = "#ff7";
+
+                    delete node.enzymeName;
+                    delete node.enzymeEC;
+
+                    break;
+                case "Reaction":
+                    node["name"] = node.reactionDescription;
+                    node["property_name"] = "reactionKEGG";
+                    node["property"] = node.reactionKEGG;
+                    node["property2_name"] = "reactionRefs";
+                    node["property2"] = node.reactionRefs;
+                    node["color"] = "#f77";
+
+                    delete node.reactionDescription;
+                    delete node.reactionKEGG;
+                    delete node.reactionRefs;
+                    break;
+                default:
+                    break;
+            }
+
+            return node;
+        },
     },
     created() {
         axios.defaults.headers.common['Authorization'] = "Basic bmVvNGo6YWRtaW4=";

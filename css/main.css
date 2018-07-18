@@ -52,3 +52,40 @@ p{
     height: 61px;
     margin-left: -1px;
 }
+
+
+/* GRAFICO */
+
+.link {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.5px;
+}
+
+circle {
+    fill: #ccc;
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+
+.nodeReactions {
+    fill: #f77;
+}
+.nodeCompounds {
+    fill: #7f7;
+}
+.nodeOrganism {
+    fill: #77f;
+}
+.nodeEnzymes {
+    fill: #ff7;
+}
+.nodeSequences {
+    fill: #7ff;
+}
+
+text {
+    font: 12px sans-serif;
+    pointer-events: none;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
