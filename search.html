@@ -13,29 +13,19 @@
 
 <header id="app-nav">
     <div class="banner">
-        <img class="logo2path" src="img/2pathlogo.png"/>
-        <img class="grafo" src="img/bioinfo.png"/>
-    </div>
-    <div>
         <nav class="navbar">
             <a class="navbar-brand" href="index.html">Home</a>
             <a class="navbar-brand chosen-menu" href="#">Search</a>
             <a class="navbar-brand" href="help.html">Help</a>
         </nav>
+        <div class="banner-imgs flex-row">
+            <img class="logo2path" src="img/2pathlogo.png"/>
+            <img class="grafo" src="img/bioinfo.png"/>
+        </div>
     </div>
 </header>
 
 <style>
-
-    body {
-        background: #eee;
-    }
-
-    #search .flex-row {
-        display: flex;
-        flex-flow: row nowrap;
-    }
-
     #search #search-side-menu .search-filters-1,
     #search #search-side-menu .search-filters-2 {
         background: #fff;
@@ -43,7 +33,7 @@
         flex-flow: column;
         padding: 20px 10px;
         margin: 8px;
-        box-shadow: 2px 2px 10px 0px #888;
+        box-shadow: 1px 1px 10px 0px #888;
         z-index: 9;
         min-height: 200px;
         max-width: 300px;
@@ -54,9 +44,19 @@
         margin-top: 10px;
         background: #00427e;
         color: #fff;
-        box-shadow: 1px 1px 3px #2671b5;
+        box-shadow: 2px 2px 3px #2671b5;
         border: 0px;
         border-radius: 10px;
+    }
+
+    #search #search-side-menu .search-filters-1 button:focus,
+    #search #search-side-menu .search-filters-2 button:focus {
+        outline: none;
+    }
+
+    #search #search-side-menu .search-filters-1 button:active,
+    #search #search-side-menu .search-filters-2 button:active {
+        background: #2671b5;
     }
 
     #search #search-side-menu .search-filters-2 {
@@ -71,7 +71,7 @@
 
     #search #search-side-menu .search-filters-2 span.label {
         font-size: 12px;
-        line-height: 30px;
+        line-height: 20px;
         min-width: 40px;
         text-align: end;
         padding-right: 4px;
@@ -101,7 +101,7 @@
 
 <div id="search">
     <!-- SIDE MENU -->
-    <div id="search-side-menu" class="flex-row">
+    <div id="search-side-menu" style="display:flex;flex-flow: row wrap;">
         <div class="search-filters-1">
             <span class="title">Choose the organism</span>
             <select v-model="organismoSelecionado">
