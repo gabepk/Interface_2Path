@@ -69,35 +69,58 @@ p {
 
 /* GRAFICO */
 
-.link {
+#graph-div {
+    width: 100%;
+    height: 600px;
+    display: flex;
+    flex-flow: row-reverse;
+}
+
+#graph-div #node-label {
+    width: 200px;
+    height: 400px;
+    position: absolute;
+    background: #fff;
+    box-shadow: 1px 1px 10px 0px #888;
+    z-index: 9;
+    margin-top: -200px;
+    border: 1px solid #2671b5;
+}
+
+#graph-div #graph-view {
+    background: #ddd;
+    margin: 8px;
+    border: 1px solid #bbb;
+}
+
+#graph-div #graph-view {
+    width: 100%;
+    height: 100%;
+}
+
+#graph-div #graph-view  .link {
     fill: none;
     stroke: #666;
     stroke-width: 1.5px;
 }
 
-circle {
+#graph-div #graph-view  circle {
     fill: #ccc;
     stroke: #333;
     stroke-width: 1.5px;
 }
 
-.nodeReactions {
+#graph-div #graph-view  .nodeReaction {
     fill: #f77;
 }
-.nodeCompounds {
+#graph-div #graph-view  .nodeCompound {
     fill: #7f7;
 }
-.nodeOrganism {
-    fill: #77f;
-}
-.nodeEnzymes {
+#graph-div #graph-view  .nodeEnzymes {
     fill: #ff7;
 }
-.nodeSequences {
-    fill: #7ff;
-}
 
-text {
+#graph-div #graph-view  text {
     font: 12px sans-serif;
     pointer-events: none;
     text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
