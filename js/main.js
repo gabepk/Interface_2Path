@@ -146,7 +146,7 @@ var search = new Vue({
             var body = {};
             if (this.organismoSelecionado == 0) {
                 body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
-                + this.compostoOrigemSelecionado + " AND ID(c2) = " + this.compostoFinalSelecionado
+                + /*this.compostoOrigemSelecionado*/ 1 + " AND ID(c2) = " + /*this.compostoFinalSelecionado*/ 13594
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 

@@ -14,7 +14,23 @@ var graph_div = new Vue({
     watch: {
         graph: function(graph, _) {
             console.log(graph);
-            if (graph.nodes.length <= 0) return;
+
+            // Apaga grafo anterior
+            var gs = document.getElementById("graph-view");
+            var i = gs.children.length - 1;
+            while (i > 0) gs.removeChild(gs.childNodes[i--]);
+
+            // Nao existe caminho
+            if (graph.nodes.length <= 0) {
+                // MOSTRA MSG NAO TEM PATH
+                return;
+            }
+
+            // Tem no, mas eh enzima
+            if (graph.links.length <= 0) {
+                // MOSTRA MSG QUE EXISTE ENZIMA
+                return;
+            }
 
             this.svg = d3.select("svg")
                 .attr("width", this.width)
@@ -40,19 +56,18 @@ var graph_div = new Vue({
                         ["CATALYSE",
                         "HAS",
                         "MATCHES",
-                        "SUBSTRATE_FOR",
-                        "PRODUCTOF"])
+                        "PRODUCT_OF"])
                 .enter()
                 .append("marker")
                 .attr("id", function(d) {return d;})
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 15)
-                .attr("refY", -1.5)
-                .attr("markerWidth", 15)
-                .attr("markerHeight", 15)
+                .attr("refX", /*15*/47)
+                .attr("refY", /*-1.5*/-22)
+                .attr("markerWidth", /*15*/20)
+                .attr("markerHeight", /*15*/20)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", "M0,-2L5,0L0,02");
+                .attr("d", /*"M0,-2L5,0L0,02"*/"M0,4L8,-3L5,05");
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -66,11 +81,18 @@ var graph_div = new Vue({
                     return "url(#" + d.type + ")";});
     
             this.circle = this.svg.append("g")
-                .selectAll("circle")
+                .selectAll("image")
                 .data(graph.nodes)
                 .enter()
-                .append("circle")
-                .attr("r", 22)
+                .append("svg:image")
+                .attr("xlink:href", function(d) {
+                    if (d.label.indexOf("Compound") >= 0)
+                        return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif";
+                    else
+                        return "http://www.soscentroeletronico.com.br/images/raio.svg"
+                })
+                .attr("x", "-50")
+                .attr("width", "100")
                 .attr("class", function(d) {return "node" + d.label;})
                 /*.attr("onmouseover", function(d) {
                     return "showLabels(this, \""+ d.label+"\",\""+d.name+"\",\""+d.property+"\");"})
@@ -81,16 +103,16 @@ var graph_div = new Vue({
                         .on("drag", this.dragged)
                         .on("end", this.dragended));
             
-            this.circle.append("title")
-                .text(function(d) { return d.property; });
+            /*this.circle.append("title")
+                .text(function(d) { return d.property; });*/
 
-            this.text = this.svg.append("g").selectAll("text")
+            /*this.text = this.svg.append("g").selectAll("text")
                 .data(graph.nodes)
                 .enter()
                 .append("text")
                 .attr("x", -20)
                 .attr("y", ".31em")
-                .text(function(d) {return d.property;});
+                .text(function(d) {return d.property;});*/
         },
     },
     methods: {
@@ -109,7 +131,6 @@ var graph_div = new Vue({
         tick() {
             this.path.attr("d", this.linkArc);
             this.circle.attr("transform", this.transform);
-            this.text.attr("transform", this.transform);
         },
         linkArc(d) {
             var dx = d.target.x - d.source.x,
