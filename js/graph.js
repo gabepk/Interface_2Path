@@ -53,21 +53,18 @@ var graph_div = new Vue({
     
             this.svg.append("defs").selectAll("marker")
                 .data(
-                        ["CATALYSE",
-                        "HAS",
-                        "MATCHES",
-                        "PRODUCT_OF"])
+                        ["REACTS_WITH_ENZYME"])
                 .enter()
                 .append("marker")
                 .attr("id", function(d) {return d;})
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", /*15*/47)
-                .attr("refY", /*-1.5*/-22)
-                .attr("markerWidth", /*15*/20)
-                .attr("markerHeight", /*15*/20)
+                .attr("refX", /*15*/35)
+                .attr("refY", /*-1.5*/-10)
+                .attr("markerWidth", 15)
+                .attr("markerHeight", 15)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", /*"M0,-2L5,0L0,02"*/"M0,4L8,-3L5,05");
+                .attr("d", /*"M0,-2L5,0L0,02"*/"M0,-4L8,-4L2,02");
 
             this.path = this.svg.append("g")
                 .selectAll("path")

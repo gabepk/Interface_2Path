@@ -169,26 +169,54 @@ var search = new Vue({
 
                 if (response.data.data.length > 0) {
                     var nodesRaw = response.data.data[0][0];
+
+                    var reactionsIds = [];
                     if (nodesRaw) {
                         for (var i=0; i<nodesRaw.length; i++) {
                             var node = nodesRaw[i].data;
                             node.id = nodesRaw[i].metadata.id;
                             node.label = nodesRaw[i].metadata.labels[0];
+
+                            // Armazena so as reacoes e nao armazena
+                            if (node.label.indexOf("Reaction") >= 0) {
+                                reactionsIds.push(node.id.toString());
+                                continue;
+                            }
+
                             nodes.push( vm.parseNode(node) );
                         }
                     }
 
                     var linksRaw = response.data.data[0][1];
                     if(linksRaw) {
+                        var compoundSourceMap = [];
+                        var compoundTargetMap = [];
+
                         for (var i=0; i<linksRaw.length; i++) {
-                            var link = {start: '', end: '', type: ''};
-                            var startURL = linksRaw[i].start.split("/");
-                            link.source = startURL[startURL.length - 1];
-                            var endURL = linksRaw[i].end.split("/");
-                            link.target = endURL[endURL.length - 1];
-                            link.type = linksRaw[i].type;
-                            link.id = linksRaw[i].metadata.id;
-                            links.push(link);
+                            var startURL1 = linksRaw[i].start.split("/");
+                            var source1 = startURL1[startURL1.length - 1];
+                            var endURL1 = linksRaw[i].end.split("/");
+                            var target1 = endURL1[endURL1.length - 1];
+
+                            // Verifica se target eh reacao
+                            if (reactionsIds.indexOf(target1) >= 0) {
+                                for (var j=0; j<linksRaw.length; j++) {
+                                    var startURL2 = linksRaw[j].start.split("/");
+                                    var source2 = startURL2[startURL2.length - 1];
+                                    var endURL2 = linksRaw[j].end.split("/");
+                                    var target2 = endURL2[endURL2.length - 1];
+
+                                    if (target1 == source2) {
+                                        // Cria links de composto para composto direto source1 -> target2
+                                        var link = {};
+                                        link.source = source1;
+                                        link.target = target2;
+                                        link.type = "REACTS_WITH_ENZYME";
+                                        link.id = linksRaw[i].metadata.id;
+                                        links.push(link);
+                                    }
+                                }
+                            }
                         }
                     }
                 }

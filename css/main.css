@@ -24,9 +24,9 @@ p {
     padding-bottom: 10px;
 }
 
-.banner .banner-imgs {
-    background: linear-gradient(30deg, #00427e 40%, #ffffff 41%);
-    padding-left: 150px;
+.banner .banner-imgs {    
+    background: linear-gradient(144deg, #ffffff 65%, #00427e 66%);
+    padding-right: 150px;
 }
 
 .banner img.logo2path  {
@@ -80,7 +80,7 @@ p {
     width: 200px;
     height: 400px;
     position: absolute;
-    background: #fff;
+    background: #00427e;
     box-shadow: 1px 1px 10px 0px #888;
     z-index: 9;
     margin-top: -200px;
@@ -88,7 +88,7 @@ p {
 }
 
 #graph-div #graph-view {
-    background: #ddd;
+    background: #fff;
     margin: 8px;
     border: 1px solid #bbb;
 }
