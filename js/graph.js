@@ -13,6 +13,7 @@ var graph_div = new Vue({
     },
     watch: {
         graph: function(graph, _) {
+            var vm = this;
             console.log(graph);
 
             // Apaga grafo anterior
@@ -39,7 +40,7 @@ var graph_div = new Vue({
             this.simulation = d3.forceSimulation()
                 .force("link", d3.forceLink()
                         .id(function(d) { return d.id; })
-                        .distance(150)
+                        .distance(250)
                         .strength(1))
                 .force("collide",d3.forceCollide(75))
                 .force("center", d3.forceCenter(this.width / 2.4, this.height / 2.4));
@@ -58,13 +59,29 @@ var graph_div = new Vue({
                 .append("marker")
                 .attr("id", function(d) {return d;})
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", /*15*/35)
-                .attr("refY", /*-1.5*/-10)
+                .attr("refX", 28)
+                .attr("refY", -5)
                 .attr("markerWidth", 15)
                 .attr("markerHeight", 15)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", /*"M0,-2L5,0L0,02"*/"M0,-4L8,-4L2,02");
+                .attr("d", "M0,-4L8,-3L1,02");
+
+            this.svg.append("defs").selectAll("marker")
+                .data(graph.nodes)
+                .enter()
+                .append("pattern")
+                .attr("id", function(d) {return "pattern_" + d.property})
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("patternUnits", "objectBoundingBox")
+                .attr("height", 75)
+                .attr("width", 75)
+                .append("image")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("xlink:href", function(d) {return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif"});
+
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -81,16 +98,25 @@ var graph_div = new Vue({
                 .selectAll("image")
                 .data(graph.nodes)
                 .enter()
-                .append("svg:image")
+                /*.append("svg:image")
                 .attr("xlink:href", function(d) {
                     if (d.label.indexOf("Compound") >= 0)
                         return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif";
                     else
                         return "http://www.soscentroeletronico.com.br/images/raio.svg"
-                })
-                .attr("x", "-50")
-                .attr("width", "100")
+                })*/
+                .append("circle")
+                .attr("cx", "0")
+                .attr("cy", "0")
+                .attr("r", "45")
+                .attr("style", function(d) {return "fill: url(#pattern_" + d.property + ")"})
                 .attr("class", function(d) {return "node" + d.label;})
+                .attr("onclick", function(d) {
+                    // Popula painel
+                    
+                    // Mostra painel
+                    document.getElementById("node-label").style.width = "250px";
+                })
                 /*.attr("onmouseover", function(d) {
                     return "showLabels(this, \""+ d.label+"\",\""+d.name+"\",\""+d.property+"\");"})
                 .attr("onmouseout", function(d) {
@@ -113,14 +139,15 @@ var graph_div = new Vue({
         },
     },
     methods: {
-        showLabels(e, label, name, property) { // TODO MELHORAR
+        showLabels(d) { // TODO MELHORAR
             // Mostra propriedades em um campo da página
-            e.style.fill = "#55a";
+            console.log(d);
+            /*e.style.fill = "#55a";
             var nodeLabel = document.getElementById("node-label");	
             nodeLabel.innerHTML = 
                 "<h3><b>" + label.substring(0, label.length - 1) +
                 "</b></h3><h4><b>Nome</b>: " + name +
-                "<br/><b>ID: </b>: " + property + "</h4>";
+                "<br/><b>ID: </b>: " + property + "</h4>";*/
         },
         clearLabels(e, cor) { // TODO MELHORAR
             e.style.fill = cor;

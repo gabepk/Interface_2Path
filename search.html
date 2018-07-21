@@ -105,8 +105,8 @@
 
 <div id="search">
     <!-- SIDE MENU -->
-    <div id="search-side-menu" style="display:flex;flex-flow: row wrap;">
-        <div class="search-filters-1">
+    <div v-cloak id="search-side-menu" style="display:flex;flex-flow: row wrap;">
+        <div v-cloak class="search-filters-1">
             <span class="title">Choose the organism</span>
             <select v-model="organismoSelecionado">
                 <option value="0">All Organisms</option>
@@ -152,7 +152,9 @@
 
     <!-- GRAFO PRINCIPAL -->
     <div id="graph-div">
-        <div id="node-label"></div>
+        <div id="node-label" style="width:16px">
+            <div></div>
+        </div>
         <svg id="graph-view"></svg>
     </div>
 

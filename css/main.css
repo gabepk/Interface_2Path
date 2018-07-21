@@ -9,6 +9,10 @@ p {
     margin-left: 1%;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 .flex-row {
     display: flex;
     flex-flow: row nowrap;
@@ -25,7 +29,7 @@ p {
 }
 
 .banner .banner-imgs {    
-    background: linear-gradient(144deg, #ffffff 65%, #00427e 66%);
+    background: linear-gradient(144deg, #eeeeee 65%, #00427e 66%);
     padding-right: 150px;
 }
 
@@ -77,6 +81,7 @@ p {
 }
 
 #graph-div #node-label {
+    transition: width 1s ease-in;
     width: 200px;
     height: 400px;
     position: absolute;
@@ -85,6 +90,18 @@ p {
     z-index: 9;
     margin-top: -200px;
     border: 1px solid #2671b5;
+    border-radius: 10px;
+}
+
+#graph-div #node-label div {
+    width: 12px;
+    height: 40px;
+    position: absolute;
+    background: repeating-linear-gradient(180deg, #ddd 0%, #999 26%);
+    border-radius: 20px;
+    top: 44%;
+    margin-left: -6px;
+    border: 1px solid #999;
 }
 
 #graph-div #graph-view {
@@ -105,16 +122,21 @@ p {
 }
 
 #graph-div #graph-view  circle {
-    fill: #ccc;
+    fill: #fff;
     stroke: #333;
     stroke-width: 1.5px;
+    cursor: pointer;
+}
+
+#graph-div #graph-view circle:hover {
+    stroke-width: 3px;
 }
 
 #graph-div #graph-view  .nodeReaction {
     fill: #f77;
 }
 #graph-div #graph-view  .nodeCompound {
-    fill: #7f7;
+    fill: url(#pattern_image);
 }
 #graph-div #graph-view  .nodeEnzymes {
     fill: #ff7;
