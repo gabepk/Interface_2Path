@@ -81,7 +81,7 @@ p {
 }
 
 #graph-div #node-label {
-    transition: width 1s ease-in;
+    transition: width .5s ease-in;
     width: 200px;
     height: 400px;
     position: absolute;
@@ -90,7 +90,8 @@ p {
     z-index: 9;
     margin-top: -200px;
     border: 1px solid #2671b5;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 #graph-div #node-label div {
@@ -102,6 +103,7 @@ p {
     top: 44%;
     margin-left: -6px;
     border: 1px solid #999;
+    cursor: pointer;
 }
 
 #graph-div #graph-view {
@@ -128,19 +130,20 @@ p {
     cursor: pointer;
 }
 
-#graph-div #graph-view circle:hover {
+#graph-div #graph-view circle:hover,
+#graph-div #graph-view circle:focus {
     stroke-width: 3px;
 }
 
-#graph-div #graph-view  .nodeReaction {
-    fill: #f77;
+/*#graph-div #graph-view  .nodeReaction {
+    
 }
 #graph-div #graph-view  .nodeCompound {
-    fill: url(#pattern_image);
+    
 }
 #graph-div #graph-view  .nodeEnzymes {
-    fill: #ff7;
-}
+    
+}*/
 
 #graph-div #graph-view  text {
     font: 12px sans-serif;

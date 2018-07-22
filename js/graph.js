@@ -72,14 +72,13 @@ var graph_div = new Vue({
                 .enter()
                 .append("pattern")
                 .attr("id", function(d) {return "pattern_" + d.property})
-                .attr("x", 0)
-                .attr("y", 0)
                 .attr("patternUnits", "objectBoundingBox")
-                .attr("height", 75)
-                .attr("width", 75)
+                .attr("height", "100%")
+                .attr("width", "100%")
                 .append("image")
-                .attr("x", 0)
-                .attr("y", 0)
+                .attr("preserveAspectRatio", "none")
+                .attr("width", "90px")
+                .attr("height", "90px")
                 .attr("xlink:href", function(d) {return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif"});
 
 
@@ -98,22 +97,15 @@ var graph_div = new Vue({
                 .selectAll("image")
                 .data(graph.nodes)
                 .enter()
-                /*.append("svg:image")
-                .attr("xlink:href", function(d) {
-                    if (d.label.indexOf("Compound") >= 0)
-                        return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif";
-                    else
-                        return "http://www.soscentroeletronico.com.br/images/raio.svg"
-                })*/
                 .append("circle")
-                .attr("cx", "0")
-                .attr("cy", "0")
-                .attr("r", "45")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", 45)
                 .attr("style", function(d) {return "fill: url(#pattern_" + d.property + ")"})
                 .attr("class", function(d) {return "node" + d.label;})
                 .attr("onclick", function(d) {
                     // Popula painel
-                    
+
                     // Mostra painel
                     document.getElementById("node-label").style.width = "250px";
                 })
@@ -188,3 +180,10 @@ var graph_div = new Vue({
         
     }
 });
+
+function togglePainel() {
+    var nodeLabel = document.getElementById("node-label");
+    if (nodeLabel && nodeLabel.style.width == "16px") 
+        nodeLabel.style.width = "250px";
+    else nodeLabel.style.width = "16px";
+}
