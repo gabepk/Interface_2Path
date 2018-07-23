@@ -128,21 +128,21 @@
             <span class="title">Search Pathway</span>
             <div>
                 <div class="flex-row">
-                    <span class="label">From:</span><input placeholder="Origin Component" v-model="compostoOrigemSelecionado"/>
+                    <span class="label">From:</span><input placeholder="Origin Component" v-model="compostoOrigemNome"/>
                 </div>
                 <ul id="compostoOrigemLista">
-                    <li v-for="compostoOrigem in compostoOrigemLista"
-                        @click="selecionaCompostoOrigem(compostoOrigem)">{{compostoOrigem.compoundName}}
+                    <li v-for="compostoOrigemItem in compostoOrigemLista"
+                        @click="selecionaCompostoOrigem(compostoOrigemItem)">{{compostoOrigemItem.compoundName}}
                     </li>
                 </ul>
             </div>
             <div>
                 <div class="flex-row">
-                    <span class="label">To:</span><input placeholder="Final Component" v-model="compostoFinalSelecionado"/>
+                    <span class="label">To:</span><input placeholder="Final Component" v-model="compostoFinalNome"/>
                 </div>
                 <ul id="compostoFinalLista">
-                    <li v-for="compostoFinal in compostoFinalLista"
-                        @click="selecionaCompostoFinal(compostoFinal)">{{compostoFinal.compoundName}}
+                    <li v-for="compostoFinalItem in compostoFinalLista"
+                        @click="selecionaCompostoFinal(compostoFinalItem)">{{compostoFinalItem.compoundName}}
                     </li>
                 </ul>
             </div>
@@ -196,9 +196,10 @@
 <script src="js/polyfill.min.js"></script>
 <script src="js/bootstrap-vue.js"></script>
 <script src="js/v-autocomplete.js"></script>
+<script src="js/d3.v4.min.js"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
 
 <!-- controllers -->
-<script src="js/d3.v4.min.js"></script>
 <script src="js/graph.js"></script>
 <script src="js/main.js"></script>
 

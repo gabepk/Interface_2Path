@@ -32,8 +32,6 @@ var graph_div = new Vue({
             while (i > 0) gs.removeChild(gs.childNodes[i--]);
 
             // Fecha painel
-            this.ifNodeWasSelected = false;
-            this.selectedNode = {};
             hideDetails();
 
             // Nao existe caminho
@@ -196,6 +194,8 @@ function showDetails(index) {
 }
 
 function hideDetails() {
+    graph_div.ifNodeWasSelected = false;
+    graph_div.selectedNode = {};
     document.getElementById("msgs-painel").style.display = "none";
     document.getElementById("node-label").style.width = "16px";
 }

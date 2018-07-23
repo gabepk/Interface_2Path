@@ -11,15 +11,17 @@ var search = new Vue({
         enzimaSelecionada: '',
 
         compostoOrigemLista: [],
-        compostoOrigemSelecionado: '',
+        compostoOrigem: {},
+        compostoOrigemNome: '',
         compostoOrigemFoiEscolhido: false,
 
         compostoFinalLista: [],
-        compostoFinalSelecionado: '',
+        compostoFinal: {},
+        compostoFinalNome: '',
         compostoFinalFoiEscolhido: false
     },
     watch: {
-        compostoOrigemSelecionado: function(composto, _) {
+        compostoOrigemNome: function(composto, _) {
             var vm = this;
             this.compostoOrigemLista = [];
             if(!this.compostoOrigemFoiEscolhido) {
@@ -48,7 +50,7 @@ var search = new Vue({
                 this.compostoOrigemFoiEscolhido = false;
             }
         },
-        compostoFinalSelecionado: function(composto, _) {
+        compostoFinalNome: function(composto, _) {
             var vm = this;
             this.compostoFinalLista = [];
             if(!this.compostoFinalFoiEscolhido) {
@@ -154,12 +156,12 @@ var search = new Vue({
             var body = {};
             if (this.organismoSelecionado == 0) {
                 body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
-                + /*this.compostoOrigemSelecionado*/ 1 + " AND ID(c2) = " + /*this.compostoFinalSelecionado*/ 13594
+                + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
                 "t.taxId = \"" + this.organismoSelecionado + "\" AND ID(c1) = "
-                + this.compostoOrigemSelecionado + " AND ID(c2) = " + this.compostoFinalSelecionado
+                + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
             }
 
@@ -242,11 +244,15 @@ var search = new Vue({
             });
         },
         selecionaCompostoOrigem(composto) {
-            this.compostoOrigemSelecionado = composto.id;
+            this.compostoOrigem.id = composto.id;
+            this.compostoOrigem.nome = composto.compoundName;
+            this.compostoOrigemNome = composto.compoundName;
             this.compostoOrigemFoiEscolhido = true;
         },
         selecionaCompostoFinal(composto) {
-            this.compostoFinalSelecionado = composto.id;
+            this.compostoFinal.id = composto.id;
+            this.compostoFinal.nome = composto.compoundName;
+            this.compostoFinalNome = composto.compoundName;
             this.compostoFinalFoiEscolhido = true;
         },
         parseNode(node) {
@@ -299,3 +305,22 @@ var search = new Vue({
         this.populaListaOrganismos();
     }
 });
+
+/* Controlador da dropdown */
+
+/* https://stackoverflow.com/questions/1403615/use-jquery-to-hide-a-div-when-the-user-clicks-outside-of-it */
+/*var clickDocument = $(document).mouseup(function(e)  {
+    var containerOrigem = $("#compostoOrigemLista");
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!containerOrigem.is(e.target) && containerOrigem.has(e.target).length === 0) {
+        containerOrigem.hide();
+        $("#compostoOrigemLista").unbind('click', clickDocument);
+    }
+
+    var containerFinal = $("#compostoFinalLista");
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!containerFinal.is(e.target) && containerFinal.has(e.target).length === 0) {
+        containerFinal.hide();
+        $("#compostoFinalLista").unbind('click', clickDocument);
+    }
+});*/
