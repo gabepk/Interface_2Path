@@ -9,7 +9,17 @@ var graph_div = new Vue({
         nodeLabel: '',
         path: '',
         circle: '',
-        text: ''
+        text: '',
+
+        selectedNode: {
+            name: 'GG',
+            label: '',
+            property_name: '',
+            property: '',
+            property2_name: '',
+            property2:''
+        },
+        ifNodeWasSelected: false
     },
     watch: {
         graph: function(graph, _) {
@@ -20,6 +30,11 @@ var graph_div = new Vue({
             var gs = document.getElementById("graph-view");
             var i = gs.children.length - 1;
             while (i > 0) gs.removeChild(gs.childNodes[i--]);
+
+            // Fecha painel
+            this.ifNodeWasSelected = false;
+            this.selectedNode = {};
+            hideDetails();
 
             // Nao existe caminho
             if (graph.nodes.length <= 0) {
@@ -81,7 +96,6 @@ var graph_div = new Vue({
                 .attr("height", "90px")
                 .attr("xlink:href", function(d) {return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif"});
 
-
             this.path = this.svg.append("g")
                 .selectAll("path")
                 .data(graph.links)
@@ -103,16 +117,7 @@ var graph_div = new Vue({
                 .attr("r", 45)
                 .attr("style", function(d) {return "fill: url(#pattern_" + d.property + ")"})
                 .attr("class", function(d) {return "node" + d.label;})
-                .attr("onclick", function(d) {
-                    // Popula painel
-
-                    // Mostra painel
-                    document.getElementById("node-label").style.width = "250px";
-                })
-                /*.attr("onmouseover", function(d) {
-                    return "showLabels(this, \""+ d.label+"\",\""+d.name+"\",\""+d.property+"\");"})
-                .attr("onmouseout", function(d) {
-                    return "clearLabels(this, \""+ d.cor+"\")"})*/
+                .attr("onclick", function(d) {return "showDetails(" + d.index + ")"})
                 .call(d3.drag()
                         .on("start", this.dragstarted)
                         .on("drag", this.dragged)
@@ -121,32 +126,23 @@ var graph_div = new Vue({
             /*this.circle.append("title")
                 .text(function(d) { return d.property; });*/
 
-            /*this.text = this.svg.append("g").selectAll("text")
+            this.text = this.svg.append("g").selectAll("text")
                 .data(graph.nodes)
                 .enter()
                 .append("text")
-                .attr("x", -20)
-                .attr("y", ".31em")
-                .text(function(d) {return d.property;});*/
+                .attr("x", -21)
+                .attr("y", 60)
+                .text(function(d) {return d.property;});
         },
     },
     methods: {
-        showLabels(d) { // TODO MELHORAR
-            // Mostra propriedades em um campo da página
-            console.log(d);
-            /*e.style.fill = "#55a";
-            var nodeLabel = document.getElementById("node-label");	
-            nodeLabel.innerHTML = 
-                "<h3><b>" + label.substring(0, label.length - 1) +
-                "</b></h3><h4><b>Nome</b>: " + name +
-                "<br/><b>ID: </b>: " + property + "</h4>";*/
-        },
         clearLabels(e, cor) { // TODO MELHORAR
             e.style.fill = cor;
         },
         tick() {
             this.path.attr("d", this.linkArc);
             this.circle.attr("transform", this.transform);
+            this.text.attr("transform", this.transform);
         },
         linkArc(d) {
             var dx = d.target.x - d.source.x,
@@ -174,16 +170,27 @@ var graph_div = new Vue({
                 this.simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
-        }
+        },
+        togglePainel() {
+            var nodeLabel = document.getElementById("node-label");
+            if (nodeLabel && nodeLabel.style.width == "16px") 
+                showDetails(-1);
+            else hideDetails();
+        },
     },
     created: function() {
-        
     }
 });
 
-function togglePainel() {
-    var nodeLabel = document.getElementById("node-label");
-    if (nodeLabel && nodeLabel.style.width == "16px") 
-        nodeLabel.style.width = "250px";
-    else nodeLabel.style.width = "16px";
+function showDetails(index) {        
+    var node = graph_div.graph.nodes[index];
+    if (node) {
+        graph_div.ifNodeWasSelected = true;
+        graph_div.selectedNode = node;
+    }
+    document.getElementById("node-label").style.width = "250px";
+}
+
+function hideDetails() {
+    document.getElementById("node-label").style.width = "16px";
 }

@@ -94,7 +94,7 @@ p {
     border-bottom-left-radius: 10px;
 }
 
-#graph-div #node-label div {
+#graph-div #node-label .botao-detalhes {
     width: 12px;
     height: 40px;
     position: absolute;
@@ -104,6 +104,20 @@ p {
     margin-left: -6px;
     border: 1px solid #999;
     cursor: pointer;
+}
+
+#graph-div #node-label .painel-detalhes {
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+    overflow-x: hidden;
+    color: #eee;
+}
+
+#graph-div #node-label .node-nao-selecionado {
+    text-align: center;
+    color: #eee;
+    padding: 30px;
 }
 
 #graph-div #graph-view {

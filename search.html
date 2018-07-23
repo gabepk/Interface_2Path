@@ -149,16 +149,33 @@
             <button @click="searchPathway">Search 🔎</button>
         </div>
     </div>
-
-    <!-- GRAFO PRINCIPAL -->
-    <div id="graph-div">
-        <div id="node-label" style="width:16px">
-            <div onclick="togglePainel()"></div>
-        </div>
-        <svg id="graph-view"></svg>
-    </div>
-
 </div>
+
+<!-- GRAFO PRINCIPAL -->
+<div id="graph-div">
+    <div id="node-label" style="width:16px">
+        <div class="botao-detalhes" @click="togglePainel()"></div>
+        <div v-if="ifNodeWasSelected == true" class="painel-detalhes">
+            <div style="text-align: center;">
+                <p>{{selectedNode.label}}</p>
+                <p>{{selectedNode.name}}</p>
+            </div>
+            <div style="display: flex;flex-flow: row wrap;">
+                <p><u>{{selectedNode.property_name}}</u>:</p>
+                <p>{{selectedNode.property}}</p>
+            </div>
+            <div style="display: flex;flex-flow: row wrap;">
+                <p><u>{{selectedNode.property2_name}}</u>:</p>
+                <p>{{selectedNode.property2}}</p>
+            </div>
+        </div>
+        <div v-else>
+            <p class="node-nao-selecionado">⚠<br/>Select a compound or an enzyme to see their details</p>
+        </div>
+    </div>
+    <svg id="graph-view"></svg>
+</div>
+
 
 <!-- libs -->
 <script src="js/vue.js"></script>
