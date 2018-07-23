@@ -171,7 +171,7 @@
                 </div>
                 <div v-if="selectedNode.label == 'Compound'" style="text-align: center;">
                     <img :src="'https://www.kegg.jp/Fig/compound/'+selectedNode.property+'.gif'"
-                        width="220" height="auto" style="margin-bottom: 5px;">
+                        width="220" height="auto">
                     <a :href="'https://www.kegg.jp/dbget-bin/www_bget?cpd:'+selectedNode.property"
                         target="_blank"><u>More details on kegg.jp</u> <span>⎘</span></a>
                 </div>
@@ -181,7 +181,12 @@
             </div>
         </div>
     </div>
-    <svg id="graph-view"></svg>
+    <svg id="graph-view">
+        <div id="loader-graph">
+            <img src="img/loading.gif">
+        </div>
+
+    </svg>
 </div>
 
 

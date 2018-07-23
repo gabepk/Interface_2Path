@@ -80,6 +80,19 @@ p {
     flex-flow: row-reverse;
 }
 
+#graph-div #loader-graph {
+    position: absolute;
+    display: none;
+    text-align: center;
+    width: 100%;
+}
+
+#graph-div #loader-graph img {
+    width: 64px;
+    height: auto;
+    margin-top: 120px;
+}
+
 #graph-div #node-label {
     transition: width .5s ease-in;
     width: 200px;
@@ -107,6 +120,12 @@ p {
     color: #0f0;
 }
 
+#graph-div #node-label img {
+    border: 1px solid #fff;
+    margin-bottom: 5px;
+    padding: 1px;
+}
+
 #graph-div #node-label .botao-detalhes {
     width: 12px;
     height: 40px;
@@ -131,6 +150,7 @@ p {
     text-align: center;
     color: #eee;
     padding: 30px;
+    display: none;
 }
 
 #graph-div #graph-view {

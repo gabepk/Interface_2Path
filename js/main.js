@@ -84,6 +84,10 @@ var search = new Vue({
             var vm = this;
 
             // Inicia download
+            document.getElementById("search-side-menu").style.display = "none";
+            document.getElementById("graph-view").style.display = "none";
+            document.getElementById("node-label").style.display = "none";
+            
 
             // Constroi query
             var body = {};
@@ -110,6 +114,10 @@ var search = new Vue({
                 console.log(error);
             }).finally(function(){
                 // Termina download
+                document.getElementById("search-side-menu").style.display = "flex";
+                document.getElementById("graph-view").style.display = "block";
+                document.getElementById("node-label").style.display = "block";
+                
             });
         },
         showSearchEnzyme() {
@@ -161,6 +169,7 @@ var search = new Vue({
             var vm = this;
 
             // Inicia busca
+            document.getElementById("loader-graph").style.display = "block";
 
             axios.post("http://localhost:7474/db/data/cypher", body)
             .then(response => {
@@ -229,6 +238,7 @@ var search = new Vue({
                 graph_div.graph = {nodes: [], links: []};
             }).finally(function(){
                 // Termina busca
+                document.getElementById("loader-graph").style.display = "none";
             });
         },
         selecionaCompostoOrigem(composto) {
