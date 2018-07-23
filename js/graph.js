@@ -189,8 +189,13 @@ function showDetails(index) {
         graph_div.selectedNode = node;
     }
     document.getElementById("node-label").style.width = "250px";
+    setTimeout(function() {
+        document.getElementById("msgs-painel").style.display = "block";
+    }, 500);
+    
 }
 
 function hideDetails() {
+    document.getElementById("msgs-painel").style.display = "none";
     document.getElementById("node-label").style.width = "16px";
 }

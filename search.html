@@ -155,22 +155,30 @@
 <div id="graph-div">
     <div id="node-label" style="width:16px">
         <div class="botao-detalhes" @click="togglePainel()"></div>
-        <div v-if="ifNodeWasSelected == true" class="painel-detalhes">
-            <div style="text-align: center;">
-                <p>{{selectedNode.label}}</p>
-                <p>{{selectedNode.name}}</p>
+        <div id="msgs-painel" style="display: none">
+            <div v-if="ifNodeWasSelected == true" class="painel-detalhes">
+                <div style="text-align: center;">
+                    <p>{{selectedNode.label}}</p>
+                    <p>{{selectedNode.name}}</p>
+                </div>
+                <div style="display: flex;flex-flow: row wrap;">
+                    <p><i>{{selectedNode.property_name}}</i>:</p>
+                    <p>{{selectedNode.property}}</p>
+                </div>
+                <div style="display: flex;flex-flow: row wrap;">
+                    <p><i>{{selectedNode.property2_name}}</i>:</p>
+                    <p>{{selectedNode.property2}}</p>
+                </div>
+                <div v-if="selectedNode.label == 'Compound'" style="text-align: center;">
+                    <img :src="'https://www.kegg.jp/Fig/compound/'+selectedNode.property+'.gif'"
+                        width="220" height="auto" style="margin-bottom: 5px;">
+                    <a :href="'https://www.kegg.jp/dbget-bin/www_bget?cpd:'+selectedNode.property"
+                        target="_blank"><u>More details on kegg.jp</u> <span>⎘</span></a>
+                </div>
             </div>
-            <div style="display: flex;flex-flow: row wrap;">
-                <p><u>{{selectedNode.property_name}}</u>:</p>
-                <p>{{selectedNode.property}}</p>
+            <div v-else>
+                <p class="node-nao-selecionado">⚠<br/>Select a compound or an enzyme to see their details</p>
             </div>
-            <div style="display: flex;flex-flow: row wrap;">
-                <p><u>{{selectedNode.property2_name}}</u>:</p>
-                <p>{{selectedNode.property2}}</p>
-            </div>
-        </div>
-        <div v-else>
-            <p class="node-nao-selecionado">⚠<br/>Select a compound or an enzyme to see their details</p>
         </div>
     </div>
     <svg id="graph-view"></svg>

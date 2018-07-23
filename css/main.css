@@ -94,6 +94,19 @@ p {
     border-bottom-left-radius: 10px;
 }
 
+#graph-div #node-label p {
+    margin-bottom: .5rem;
+}
+
+#graph-div #node-label a {
+    color: #0f0;
+}
+
+#graph-div #node-label a span {
+    font-size: 21px;
+    color: #0f0;
+}
+
 #graph-div #node-label .botao-detalhes {
     width: 12px;
     height: 40px;
