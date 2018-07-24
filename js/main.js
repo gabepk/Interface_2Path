@@ -131,7 +131,7 @@ var search = new Vue({
 
             if (!this.enzimaSelecionada) {
                 // Zera grafo
-                this.msgSeNaoEncontrado = "Informe o EC da enzima";
+                this.msgSeNaoEncontrado = "Please enter the Enzyme EC";
                 document.getElementById("input-enzyme").classList.add("input-erro");
                 graph_div.graph = {nodes: [], links: []};
                 return;
@@ -141,17 +141,17 @@ var search = new Vue({
 
             // Constroi query
             var body = {};
-            this.msgSeNaoEncontrado = "⚠ Enzima " + this.enzimaSelecionada;
+            this.msgSeNaoEncontrado = "⚠ Enzyme " + this.enzimaSelecionada;
 
             if (this.organismoSelecionado.id == 0) {
                 body["query"] = "MATCH q=(e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN DISTINCT(nodes(q)) as nodes";
                 
-                this.msgSeNaoEncontrado += " não encontrada. ⚠"
+                this.msgSeNaoEncontrado += " not found in any organism ⚠"
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado.id + 
                     "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
 
-                this. msgSeNaoEncontrado += " não encontrada no organismo " + this.organismoSelecionado.nome + ". ⚠";
+                this. msgSeNaoEncontrado += " not found on organism " + this.organismoSelecionado.nome + ". ⚠";
             }
 
             this.search(body);
@@ -164,25 +164,30 @@ var search = new Vue({
 
             this.compostoOrigem = {};
             var compostoOrigemSelecionada = document.getElementById("datalist-compound-origem").options;
-            if (compostoOrigemSelecionada.length == 1) {
+            if (compostoOrigemSelecionada.length == 1|| 
+                (compostoOrigemSelecionada[0] && compostoOrigemSelecionada[0].value == this.compostoOrigemNome)) {
                 this.compostoOrigem.id = compostoOrigemSelecionada[0].getAttribute("data-id");
                 this.compostoOrigem.nome = compostoOrigemSelecionada[0].value;
                 document.getElementById("input-compound-origem-nome").classList.remove("input-erro");
             } else {
                 seTemErro = true;
-                this.msgSeNaoEncontrado += " Selecione o composto de origem. ";
+                this.msgSeNaoEncontrado += " Please select the origin compound. ";
                 document.getElementById("input-compound-origem-nome").classList.add("input-erro");
             }
 
             this.compostoFinal = {};
             var compostoFinalSelecionada = document.getElementById("datalist-compound-final").options;
-            if (compostoFinalSelecionada.length == 1) {
+
+            // Seleciona composto se ele eh o unico da lista ou
+            // se o primeiro da lista tem o mesmo nome
+            if (compostoFinalSelecionada.length == 1 || 
+                    (compostoFinalSelecionada[0] && compostoFinalSelecionada[0].value == this.compostoFinalNome)) {
                 this.compostoFinal.id = compostoFinalSelecionada[0].getAttribute("data-id");
                 this.compostoFinal.nome = compostoFinalSelecionada[0].value;
                 document.getElementById("input-compound-final-nome").classList.remove("input-erro");
             } else {
                 seTemErro = true;
-                this.msgSeNaoEncontrado += " Selecione o composto final. ";
+                this.msgSeNaoEncontrado += " Please select the final compound. ";
                 document.getElementById("input-compound-final-nome").classList.add("input-erro");
             }
 
@@ -194,21 +199,21 @@ var search = new Vue({
 
             // Constroi query
             var body = {};
-            this.msgSeNaoEncontrado = "⚠ Caminho de " + this.compostoOrigem.nome + " para " + this.compostoFinal.nome;
+            this.msgSeNaoEncontrado = "⚠ Pathway from " + this.compostoOrigem.nome + " to " + this.compostoFinal.nome;
 
             if (this.organismoSelecionado.id == 0) {
                 body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
                 + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
 
-                this.msgSeNaoEncontrado += " não existe em nenhum organismo. ⚠";
+                this.msgSeNaoEncontrado += " not found in any organism ⚠";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
                 "t.taxId = \"" + this.organismoSelecionado.id + "\" AND ID(c1) = "
                 + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
 
-                this.msgSeNaoEncontrado += " não existe no organismo " + this.organismoSelecionado.nome + ". ⚠";
+                this.msgSeNaoEncontrado += " not found on organism " + this.organismoSelecionado.nome + " ⚠";
             }
 
             this.search(body);
