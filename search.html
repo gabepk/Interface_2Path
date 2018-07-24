@@ -5,11 +5,16 @@
           href="img/favicon.ico"/>
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="css/bootstrap-vue.css"/>
-    <link type="text/css" rel="stylesheet" href="css/v-autocomplete.css"/>
     <link type="text/css" rel="stylesheet" href="css/main.css"/>
+
     <title>Search</title>
 
     <style>
+            #search .input-erro {
+                outline: 1px solid #f00;
+                background: #fdd;
+            }
+
             #search #search-side-menu span.title {
                 margin-bottom: 10px;
                 font-size: 16px;
@@ -27,7 +32,7 @@
                 box-shadow: 1px 1px 10px 0px #888;
                 z-index: 9;
                 min-height: 200px;
-                max-width: 300px;
+                min-width: 300px;
             }
         
             #search #search-side-menu .search-filters-1 button,
@@ -108,19 +113,21 @@
     <div v-cloak id="search-side-menu" style="display:flex;flex-flow: row wrap;">
         <div v-cloak class="search-filters-1">
             <span class="title">Choose the organism</span>
-            <select v-model="organismoSelecionado">
-                <option value="0">All Organisms</option>
-                <option v-for="organismo in organismoLista" v-bind:value="organismo.id">
-                    {{ organismo.nome }}
+            <input id="input-organism-nome" list="datalist-organisms" placeholder="Organism">
+            <datalist id="datalist-organisms">
+                <option>All Organisms</option>
+                <option v-for="organismo in organismoLista">
+                    {{organismo.nome}}
                 </option>
-            </select>
+            </datalist>
             <button @click="showSearchEnzyme">Search Enzyme →</button>
             <button @click="showSearchPathway">Search Pathway →</button>
         </div>
         <div id="search-enzyme-menu" class="search-filters-2">
             <span class="title">Search Enzyme</span>
             <div class="flex-row">
-                <span class="label">EC:</span><input placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
+                <span class="label">EC:</span>
+                    <input id="input-enzyme" placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
             </div>
             <button @click="searchEnzyme">Search 🔎</button>
         </div>
@@ -128,23 +135,25 @@
             <span class="title">Search Pathway</span>
             <div>
                 <div class="flex-row">
-                    <span class="label">From:</span><input placeholder="Origin Component" v-model="compostoOrigemNome"/>
+                    <span class="label">From:</span>
+                    <input id="input-compound-origem-nome" list="datalist-compound-origem" 
+                    placeholder="Origin Compound" v-model="compostoOrigemNome">
                 </div>
-                <ul id="compostoOrigemLista">
-                    <li v-for="compostoOrigemItem in compostoOrigemLista"
-                        @click="selecionaCompostoOrigem(compostoOrigemItem)">{{compostoOrigemItem.compoundName}}
-                    </li>
-                </ul>
+                <datalist id="datalist-compound-origem">
+                    <option v-for="compound in compostoOrigemLista" 
+                        :data-id="compound.id" :value="compound.compoundName"></option>
+                </datalist>
             </div>
             <div>
                 <div class="flex-row">
-                    <span class="label">To:</span><input placeholder="Final Component" v-model="compostoFinalNome"/>
+                    <span class="label">From:</span>
+                    <input id="input-compound-final-nome" list="datalist-compound-final" 
+                    placeholder="Final Compound" v-model="compostoFinalNome">
                 </div>
-                <ul id="compostoFinalLista">
-                    <li v-for="compostoFinalItem in compostoFinalLista"
-                        @click="selecionaCompostoFinal(compostoFinalItem)">{{compostoFinalItem.compoundName}}
-                    </li>
-                </ul>
+                <datalist id="datalist-compound-final">
+                    <option v-for="compound in compostoFinalLista" 
+                        :data-id="compound.id" :value="compound.compoundName"></option>
+                </datalist>
             </div>
             <button @click="searchPathway">Search 🔎</button>
         </div>
@@ -181,9 +190,15 @@
             </div>
         </div>
     </div>
+
     <svg id="graph-view">
         <div id="loader-graph">
             <img src="img/loading.gif">
+        </div>
+        <div id="container-msg-erro">
+            <p v-cloak v-if="grafoEncontrado == false" id="msg-erro">
+                {{msgSeNaoEncontrado}}
+            </p>
         </div>
 
     </svg>
@@ -195,7 +210,6 @@
 <script src="js/axios.min.js"></script>
 <script src="js/polyfill.min.js"></script>
 <script src="js/bootstrap-vue.js"></script>
-<script src="js/v-autocomplete.js"></script>
 <script src="js/d3.v4.min.js"></script>
 <script src="js/jquery-3.3.1.min.js"></script>
 

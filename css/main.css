@@ -93,6 +93,22 @@ p {
     margin-top: 120px;
 }
 
+#graph-div #container-msg-erro {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    margin-top: 120px;
+    padding: 0% 25%;
+}
+
+#graph-div #container-msg-erro #msg-erro {
+    padding: 10px;
+    background: #fdd;
+    border: 1px solid #f00;
+    border-radius: 20px;
+    box-shadow: 0px 0px 5px 0px #f33;
+}
+
 #graph-div #node-label {
     transition: width .5s ease-in;
     width: 200px;

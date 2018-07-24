@@ -1,11 +1,8 @@
-Vue.use(VAutocomplete.default)
-
 var search = new Vue({
     el: '#search',
     data: {
         organismoLista: [],
-        organismoListaFiltrada: [],
-        organismoSelecionado: 0,
+        organismoSelecionado: {},
 
         enzimaLista: [],
         enzimaSelecionada: '',
@@ -13,71 +10,67 @@ var search = new Vue({
         compostoOrigemLista: [],
         compostoOrigem: {},
         compostoOrigemNome: '',
-        compostoOrigemFoiEscolhido: false,
 
         compostoFinalLista: [],
         compostoFinal: {},
         compostoFinalNome: '',
-        compostoFinalFoiEscolhido: false
+
+        msgSeNaoEncontrado: ''
     },
     watch: {
         compostoOrigemNome: function(composto, _) {
             var vm = this;
-            this.compostoOrigemLista = [];
-            if(!this.compostoOrigemFoiEscolhido) {
-                if (composto.length > 2) {
-                    // Constroi query
-                    var body = {};
-                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" + 
-                    composto + ".*\" RETURN c LIMIT 20";
 
-                    // Busca compostos na API para autocomplete
-                    axios.post("http://localhost:7474/db/data/cypher", body)
-                    .then(response => {
-                        for(var i=0; i<response.data.data.length; i++) {
-                            var compostosRaw = response.data.data[i][0];
-                            if (compostosRaw) {
-                                var composto = compostosRaw.data;
-                                composto.id = compostosRaw.metadata.id;
-                                vm.compostoOrigemLista.push(composto);
-                            }
+            this.compostoOrigemLista = [];
+            if (composto.length > 2) {
+                // Constroi query
+                var body = {};
+                body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" + 
+                composto + ".*\" RETURN c LIMIT 20";
+
+                // Busca compostos na API para autocomplete
+                axios.post("http://localhost:7474/db/data/cypher", body)
+                .then(response => {
+                    for(var i=0; i<response.data.data.length; i++) {
+                        var compostosRaw = response.data.data[i][0];
+                        if (compostosRaw) {
+                            var composto = compostosRaw.data;
+                            composto.id = compostosRaw.metadata.id;
+                            vm.compostoOrigemLista.push(composto);
                         }
-                    }).catch(function(error) {
-                        console.log(error);
-                    });
-                }
-            } else {
-                this.compostoOrigemFoiEscolhido = false;
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
             }
+
+            
         },
         compostoFinalNome: function(composto, _) {
             var vm = this;
-            this.compostoFinalLista = [];
-            if(!this.compostoFinalFoiEscolhido) {
-                if (composto.length > 2) {
-                    // Constroi query
-                    var body = {};
-                    body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" +
-                    composto + ".*\" RETURN c LIMIT 20";
 
-                    // Busca compostos na API para autocomplete
-                    axios.post("http://localhost:7474/db/data/cypher", body)
-                    .then(response => {
-                        for(var i=0; i<response.data.data.length; i++) {
-                            var compostosRaw = response.data.data[i][0];
-                            if (compostosRaw) {
-                                var composto = compostosRaw.data;
-                                composto.id = compostosRaw.metadata.id;
-                                vm.compostoFinalLista.push(composto);
-                            }
+            var vm = this;
+            this.compostoFinalLista = [];
+            if (composto.length > 2) {
+                // Constroi query
+                var body = {};
+                body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" +
+                composto + ".*\" RETURN c LIMIT 20";
+
+                // Busca compostos na API para autocomplete
+                axios.post("http://localhost:7474/db/data/cypher", body)
+                .then(response => {
+                    for(var i=0; i<response.data.data.length; i++) {
+                        var compostosRaw = response.data.data[i][0];
+                        if (compostosRaw) {
+                            var composto = compostosRaw.data;
+                            composto.id = compostosRaw.metadata.id;
+                            vm.compostoFinalLista.push(composto);
                         }
-                    }).catch(function(error) {
-                        console.log(error);
-                    });
-                }
-            }
-            else {
-                this.compostoFinalFoiEscolhido = false;
+                    }
+                }).catch(function(error) {
+                    console.log(error);
+                });
             }
         }
     },
@@ -89,7 +82,6 @@ var search = new Vue({
             document.getElementById("search-side-menu").style.display = "none";
             document.getElementById("graph-view").style.display = "none";
             document.getElementById("node-label").style.display = "none";
-            
 
             // Constroi query
             var body = {};
@@ -123,49 +115,102 @@ var search = new Vue({
             });
         },
         showSearchEnzyme() {
+            this.verificaOrganismo();
             document.getElementById("search-pathway-menu").style.display = "none";
             document.getElementById("search-enzyme-menu").style.display = "flex";
         },
         showSearchPathway() {
+            this.verificaOrganismo();
             document.getElementById("search-enzyme-menu").style.display = "none";
             document.getElementById("search-pathway-menu").style.display = "flex";
         },
         searchEnzyme() {
-            // Constroi query
-            var body = {};
-            if (this.organismoSelecionado == 0) {
-                body["query"] = "MATCH q=(e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN DISTINCT(nodes(q)) as nodes";
-            } else {
-                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado + 
-                    "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+            this.verificaOrganismo();
+
+            if (!this.enzimaSelecionada) {
+                // Zera grafo
+                this.msgSeNaoEncontrado = "Informe o EC da enzima";
+                document.getElementById("input-enzyme").classList.add("input-erro");
+
+                graph_div.graph = {nodes: [], links: []};
+                return;
             }
 
-            this.search(body)
-        },
-        searchPathway() {
-            /*if (!this.compostoOrigemFoiEscolhido) {
-                return;
-            } else if (!this.compostoFinalFoiEscolhido) {
-                return;
-            }*/
-
-            // FROM UDP; Uridine 5'-diphosphate
-            // TO Dihydrozeatin riboside
+            document.getElementById("input-enzyme").classList.remove("input-erro");
 
             // Constroi query
             var body = {};
-            if (this.organismoSelecionado == 0) {
+            this.msgSeNaoEncontrado = "⚠ Enzima " + this.enzimaSelecionada;
+
+            if (this.organismoSelecionado.id == 0) {
+                body["query"] = "MATCH q=(e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN DISTINCT(nodes(q)) as nodes";
+                
+                this.msgSeNaoEncontrado += " não encontrada. ⚠"
+            } else {
+                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado.id + 
+                    "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+
+                this. msgSeNaoEncontrado += " não encontrada no organismo " + this.organismoSelecionado.nome + ". ⚠";
+            }
+
+            this.search(body);
+        },
+        searchPathway() {
+            this.verificaOrganismo();
+
+            var seTemErro = false;
+            this.msgSeNaoEncontrado = "";
+
+            this.compostoOrigem = {};
+            var compostoOrigemSelecionada = document.getElementById("datalist-compound-origem").options;
+            if (compostoOrigemSelecionada.length == 1) {
+                this.compostoOrigem.id = compostoOrigemSelecionada[0].getAttribute("data-id");
+                this.compostoOrigem.nome = compostoOrigemSelecionada[0].value;
+                document.getElementById("input-compound-origem-nome").classList.remove("input-erro");
+            } else {
+                seTemErro = true;
+                this.msgSeNaoEncontrado += " Selecione o composto de origem. ";
+                document.getElementById("input-compound-origem-nome").classList.add("input-erro");
+            }
+
+            this.compostoFinal = {};
+            var compostoFinalSelecionada = document.getElementById("datalist-compound-final").options;
+            if (compostoFinalSelecionada.length == 1) {
+                this.compostoFinal.id = compostoFinalSelecionada[0].getAttribute("data-id");
+                this.compostoFinal.nome = compostoFinalSelecionada[0].value;
+                document.getElementById("input-compound-final-nome").classList.remove("input-erro");
+            } else {
+                seTemErro = true;
+                this.msgSeNaoEncontrado += " Selecione o composto final. ";
+                document.getElementById("input-compound-final-nome").classList.add("input-erro");
+            }
+
+            if (seTemErro) {
+                // Zera grafo
+                graph_div.graph = {nodes: [], links: []};
+                return;
+            }
+
+            // Constroi query
+            var body = {};
+            this.msgSeNaoEncontrado = "⚠ Caminho de " + this.compostoOrigem.nome + " para " + this.compostoFinal.nome;
+
+            if (this.organismoSelecionado.id == 0) {
                 body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
                 + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+
+                this.msgSeNaoEncontrado += " não existe em nenhum organismo. ⚠";
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
-                "t.taxId = \"" + this.organismoSelecionado + "\" AND ID(c1) = "
+                "t.taxId = \"" + this.organismoSelecionado.id + "\" AND ID(c1) = "
                 + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+
+                this.msgSeNaoEncontrado += " não existe no organismo " + this.organismoSelecionado.nome + ". ⚠";
             }
 
-            this.search(body)
+            this.search(body);
         },
         search(body) {
             var vm = this;
@@ -243,6 +288,19 @@ var search = new Vue({
                 document.getElementById("loader-graph").style.display = "none";
             });
         },
+        verificaOrganismo() {
+            var input = document.getElementById("input-organism-nome");
+
+            var organismo = this.organismoLista.find(x => x.nome == input.value);
+            if (organismo) {
+                this.organismoSelecionado.id = organismo.id;
+                this.organismoSelecionado.nome = organismo.nome;
+            } else {
+                input.value = "";
+                this.organismoSelecionado.id = 0;
+                this.organismoSelecionado.nome = "";
+            }
+        },
         selecionaCompostoOrigem(composto) {
             this.compostoOrigem.id = composto.id;
             this.compostoOrigem.nome = composto.compoundName;
@@ -305,22 +363,3 @@ var search = new Vue({
         this.populaListaOrganismos();
     }
 });
-
-/* Controlador da dropdown */
-
-/* https://stackoverflow.com/questions/1403615/use-jquery-to-hide-a-div-when-the-user-clicks-outside-of-it */
-/*var clickDocument = $(document).mouseup(function(e)  {
-    var containerOrigem = $("#compostoOrigemLista");
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!containerOrigem.is(e.target) && containerOrigem.has(e.target).length === 0) {
-        containerOrigem.hide();
-        $("#compostoOrigemLista").unbind('click', clickDocument);
-    }
-
-    var containerFinal = $("#compostoFinalLista");
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!containerFinal.is(e.target) && containerFinal.has(e.target).length === 0) {
-        containerFinal.hide();
-        $("#compostoFinalLista").unbind('click', clickDocument);
-    }
-});*/

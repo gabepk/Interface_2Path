@@ -12,18 +12,20 @@ var graph_div = new Vue({
         text: '',
 
         selectedNode: {
-            name: 'GG',
+            name: '',
             label: '',
             property_name: '',
             property: '',
             property2_name: '',
             property2:''
         },
-        ifNodeWasSelected: false
+        ifNodeWasSelected: false,
+
+        grafoEncontrado: true,
+        msgSeNaoEncontrado: ''
     },
     watch: {
         graph: function(graph, _) {
-            var vm = this;
             console.log(graph);
 
             // Apaga grafo anterior
@@ -37,8 +39,11 @@ var graph_div = new Vue({
             // Nao existe caminho
             if (graph.nodes.length <= 0) {
                 // MOSTRA MSG NAO TEM PATH
+                this.grafoEncontrado = false;
+                this.msgSeNaoEncontrado = search.msgSeNaoEncontrado;
                 return;
             }
+            this.grafoEncontrado = true;
 
             // Tem no, mas eh enzima
             if (graph.links.length <= 0) {
