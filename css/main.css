@@ -70,6 +70,87 @@ p {
     margin-left: -1px;
 }
 
+/* BUSCA */
+
+#search .input-erro {
+    outline: 1px solid #f00;
+    background: #fdd;
+}
+
+#search #search-side-menu span.title {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: bolder;
+    color: #00427e;
+}
+
+#search #search-side-menu .search-filters-1,
+#search #search-side-menu .search-filters-2 {
+    background: #fff;
+    display: flex;
+    flex-flow: column;
+    padding: 20px 10px;
+    margin: 8px;
+    box-shadow: 1px 1px 10px 0px #888;
+    z-index: 9;
+    min-height: 200px;
+    min-width: 300px;
+}
+
+#search #search-side-menu .search-filters-1 button,
+#search #search-side-menu .search-filters-2 button {
+    margin-top: 10px;
+    background: #00427e;
+    color: #fff;
+    box-shadow: 2px 2px 3px #2671b5;
+    border: 0px;
+    border-radius: 10px;
+}
+
+#search #search-side-menu .search-filters-1 button:focus,
+#search #search-side-menu .search-filters-2 button:focus {
+    outline: none;
+}
+
+#search #search-side-menu .search-filters-1 button:active,
+#search #search-side-menu .search-filters-2 button:active {
+    background: #2671b5;
+}
+
+#search #search-side-menu .search-filters-2 {
+    display: none;
+}
+
+#search #search-side-menu .search-filters-2 span.label {
+    font-size: 12px;
+    line-height: 20px;
+    min-width: 40px;
+    text-align: end;
+    padding-right: 4px;
+}
+#search #search-side-menu .search-filters-2 div input {
+    margin-bottom: 8px;
+}
+#search #search-side-menu .search-filters-2 ul {
+    list-style: none;
+    position: absolute;
+    background: #FFF;
+    overflow-y: auto;
+    z-index: 99;
+    border: 1px solid #aaa;
+    padding-left: 0px;
+    margin-top: -9px;
+    max-height: 200px;
+    box-shadow: 1px 1px 4px 0px #aaa;
+}
+
+#search #search-side-menu .search-filters-2 ul li {
+    padding-left: 10px;
+}
+#search #search-side-menu .search-filters-2 ul li:hover {
+    background: #ccc;
+}
+
 
 /* GRAFICO */
 
@@ -97,7 +178,7 @@ p {
     position: absolute;
     text-align: center;
     width: 100%;
-    margin-top: 120px;
+    margin-top: 80px;
     padding: 0% 25%;
 }
 

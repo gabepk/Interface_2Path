@@ -18,8 +18,12 @@ var search = new Vue({
         msgSeNaoEncontrado: ''
     },
     watch: {
+        enzimaSelecionada: function(enzima, _) {
+            document.getElementById("input-enzyme").classList.remove("input-erro");
+        },
         compostoOrigemNome: function(composto, _) {
             var vm = this;
+            document.getElementById("input-compound-origem-nome").classList.remove("input-erro");
 
             this.compostoOrigemLista = [];
             if (composto.length > 2) {
@@ -43,13 +47,11 @@ var search = new Vue({
                     console.log(error);
                 });
             }
-
-            
         },
         compostoFinalNome: function(composto, _) {
             var vm = this;
+            document.getElementById("input-compound-final-nome").classList.remove("input-erro");
 
-            var vm = this;
             this.compostoFinalLista = [];
             if (composto.length > 2) {
                 // Constroi query
@@ -131,7 +133,6 @@ var search = new Vue({
                 // Zera grafo
                 this.msgSeNaoEncontrado = "Informe o EC da enzima";
                 document.getElementById("input-enzyme").classList.add("input-erro");
-
                 graph_div.graph = {nodes: [], links: []};
                 return;
             }

@@ -47,8 +47,10 @@ var graph_div = new Vue({
 
             // Tem no, mas eh enzima
             if (graph.links.length <= 0) {
-                // MOSTRA MSG QUE EXISTE ENZIMA
-                return;
+                // Abre detalhes da enzima, quando lista estiver pronta
+                setTimeout(function() {
+                    showDetails(0);
+                }, 0);
             }
 
             this.svg = d3.select("svg")
@@ -97,7 +99,14 @@ var graph_div = new Vue({
                 .attr("preserveAspectRatio", "none")
                 .attr("width", "90px")
                 .attr("height", "90px")
-                .attr("xlink:href", function(d) {return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif"});
+                .attr("xlink:href", function(d) {
+                    if (d.label.indexOf("Enzyme") >= 0) {
+                        return "img/enzima.png";
+                    } else if (d.label.indexOf("Compound") >= 0) {
+                        return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif";
+                    }
+                    return "";
+                });
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -125,9 +134,6 @@ var graph_div = new Vue({
                         .on("start", this.dragstarted)
                         .on("drag", this.dragged)
                         .on("end", this.dragended));
-            
-            /*this.circle.append("title")
-                .text(function(d) { return d.property; });*/
 
             this.text = this.svg.append("g").selectAll("text")
                 .data(graph.nodes)

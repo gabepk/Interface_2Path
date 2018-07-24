@@ -8,89 +8,6 @@
     <link type="text/css" rel="stylesheet" href="css/main.css"/>
 
     <title>Search</title>
-
-    <style>
-            #search .input-erro {
-                outline: 1px solid #f00;
-                background: #fdd;
-            }
-
-            #search #search-side-menu span.title {
-                margin-bottom: 10px;
-                font-size: 16px;
-                font-weight: bolder;
-                color: #00427e;
-            }
-
-            #search #search-side-menu .search-filters-1,
-            #search #search-side-menu .search-filters-2 {
-                background: #fff;
-                display: flex;
-                flex-flow: column;
-                padding: 20px 10px;
-                margin: 8px;
-                box-shadow: 1px 1px 10px 0px #888;
-                z-index: 9;
-                min-height: 200px;
-                min-width: 300px;
-            }
-        
-            #search #search-side-menu .search-filters-1 button,
-            #search #search-side-menu .search-filters-2 button {
-                margin-top: 10px;
-                background: #00427e;
-                color: #fff;
-                box-shadow: 2px 2px 3px #2671b5;
-                border: 0px;
-                border-radius: 10px;
-            }
-        
-            #search #search-side-menu .search-filters-1 button:focus,
-            #search #search-side-menu .search-filters-2 button:focus {
-                outline: none;
-            }
-        
-            #search #search-side-menu .search-filters-1 button:active,
-            #search #search-side-menu .search-filters-2 button:active {
-                background: #2671b5;
-            }
-        
-            #search #search-side-menu .search-filters-2 {
-                display: none;
-            }
-        
-            #search #search-side-menu .search-filters-2 span.label {
-                font-size: 12px;
-                line-height: 20px;
-                min-width: 40px;
-                text-align: end;
-                padding-right: 4px;
-            }
-            #search #search-side-menu .search-filters-2 div input {
-                margin-bottom: 8px;
-            }
-            #search #search-side-menu .search-filters-2 ul {
-                list-style: none;
-                position: absolute;
-                background: #FFF;
-                overflow-y: auto;
-                z-index: 99;
-                border: 1px solid #aaa;
-                padding-left: 0px;
-                margin-top: -9px;
-                max-height: 200px;
-                box-shadow: 1px 1px 4px 0px #aaa;
-            }
-            
-            #search #search-side-menu .search-filters-2 ul li {
-                padding-left: 10px;
-            }
-            #search #search-side-menu .search-filters-2 ul li:hover {
-                background: #ccc;
-            }
-        
-        </style>
-
 </head>
 <body>
 
@@ -113,7 +30,7 @@
     <div v-cloak id="search-side-menu" style="display:flex;flex-flow: row wrap;">
         <div v-cloak class="search-filters-1">
             <span class="title">Choose the organism</span>
-            <input id="input-organism-nome" list="datalist-organisms" placeholder="Organism">
+            <input id="input-organism-nome" list="datalist-organisms" placeholder="All Organisms">
             <datalist id="datalist-organisms">
                 <option>All Organisms</option>
                 <option v-for="organismo in organismoLista">
@@ -174,16 +91,18 @@
                     <p><i>{{selectedNode.property_name}}</i>:</p>
                     <p>{{selectedNode.property}}</p>
                 </div>
-                <div style="display: flex;flex-flow: row wrap;">
+                <div v-if="selectedNode.property2_name != ''" style="display: flex;flex-flow: row wrap;">
                     <p><i>{{selectedNode.property2_name}}</i>:</p>
                     <p>{{selectedNode.property2}}</p>
                 </div>
-                <div v-if="selectedNode.label == 'Compound'" style="text-align: center;">
-                    <img :src="'https://www.kegg.jp/Fig/compound/'+selectedNode.property+'.gif'"
-                        width="220" height="auto">
+                <div v-if="selectedNode.label === 'Compound'"  style="text-align: center;">
+                    <img width="220" height="auto" :src="'https://www.kegg.jp/Fig/compound/'+selectedNode.property+'.gif'">
                     <a :href="'https://www.kegg.jp/dbget-bin/www_bget?cpd:'+selectedNode.property"
                         target="_blank"><u>More details on kegg.jp</u> <span>⎘</span></a>
                 </div>
+                <a v-if="selectedNode.label == 'Enzyme'"
+                    :href="'https://www.genome.jp/dbget-bin/www_bget?ec:'+selectedNode.property"
+                    target="_blank"><u>More details on genome.jp</u> <span>⎘</span></a>
             </div>
             <div v-else>
                 <p class="node-nao-selecionado">⚠<br/>Select a compound or an enzyme to see their details</p>
