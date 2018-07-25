@@ -29,8 +29,8 @@ var search = new Vue({
             if (composto.length > 2) {
                 // Constroi query
                 var body = {};
-                body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" + 
-                composto + ".*\" RETURN c LIMIT 20";
+                body["query"] = "MATCH (c:Compound) WHERE toLower(c.compoundName) " + 
+                    "CONTAINS toLower(\"" + composto + "\") RETURN c LIMIT 20";
 
                 // Busca compostos na API para autocomplete
                 axios.post("http://localhost:7474/db/data/cypher", body)
@@ -56,8 +56,8 @@ var search = new Vue({
             if (composto.length > 2) {
                 // Constroi query
                 var body = {};
-                body["query"] = "MATCH (c:Compound) WHERE c.compoundName =~ \"(?i).*" +
-                composto + ".*\" RETURN c LIMIT 20";
+                body["query"] = "MATCH (c:Compound) WHERE toLower(c.compoundName) " + 
+                    "CONTAINS toLower(\"" + composto + "\") RETURN c LIMIT 20";
 
                 // Busca compostos na API para autocomplete
                 axios.post("http://localhost:7474/db/data/cypher", body)
@@ -87,7 +87,7 @@ var search = new Vue({
 
             // Constroi query
             var body = {};
-            body["query"] = "MATCH (t:Taxonomy) RETURN t.taxId, t.taxName"; // TODO Tirar limite
+            body["query"] = "MATCH (t:Taxonomy) RETURN t.taxId, t.taxName";
 
             axios.post("http://localhost:7474/db/data/cypher", body)
             .then(response => {
@@ -144,17 +144,17 @@ var search = new Vue({
             this.msgSeNaoEncontrado = "⚠ Enzyme " + this.enzimaSelecionada;
 
             if (this.organismoSelecionado.id == 0) {
-                body["query"] = "MATCH q=(e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN DISTINCT(nodes(q)) as nodes";
+                body["query"] = "MATCH (e:Enzyme) WHERE e.enzymeEC = \"" + this.enzimaSelecionada + "\"  RETURN e";
                 
                 this.msgSeNaoEncontrado += " not found in any organism ⚠"
             } else {
                 body["query"] = "MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId = \"" + this.organismoSelecionado.id + 
-                    "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
+                    "\" AND e.enzymeEC = \"" + this.enzimaSelecionada + "\" RETURN e";
 
                 this. msgSeNaoEncontrado += " not found on organism " + this.organismoSelecionado.nome + ". ⚠";
             }
 
-            this.search(body);
+            this.search(body, "Enzyme");
         },
         searchPathway() {
             this.verificaOrganismo();
@@ -216,9 +216,9 @@ var search = new Vue({
                 this.msgSeNaoEncontrado += " not found on organism " + this.organismoSelecionado.nome + " ⚠";
             }
 
-            this.search(body);
+            this.search(body, "Pathway");
         },
-        search(body) {
+        search(body, type) {
             var vm = this;
 
             // Inicia busca
@@ -230,7 +230,12 @@ var search = new Vue({
                 var links = [];
 
                 if (response.data.data.length > 0) {
-                    var nodesRaw = response.data.data[0][0];
+                    var nodesRaw = [];
+                    if (type === "Enzyme") {
+                        nodesRaw.push(response.data.data[0][0]);
+                    } else if (type === "Pathway") {
+                        nodesRaw = response.data.data[0][0];
+                    }
 
                     var reactionsIds = [];
                     if (nodesRaw) {
