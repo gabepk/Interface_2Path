@@ -87,7 +87,7 @@ var graph_div = new Vue({
                 .append("path")
                 .attr("d", "M0,-4L8,-3L1,02");
 
-            this.svg.append("defs").selectAll("marker")
+            /*this.svg.append("defs").selectAll("marker")
                 .data(graph.nodes)
                 .enter()
                 .append("pattern")
@@ -106,7 +106,7 @@ var graph_div = new Vue({
                         return "https://www.kegg.jp/Fig/compound/" + d.property + ".gif";
                     }
                     return "";
-                });
+                });*/
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -127,7 +127,10 @@ var graph_div = new Vue({
                 .attr("cx", 0)
                 .attr("cy", 0)
                 .attr("r", 45)
-                .attr("style", function(d) {return "fill: url(#pattern_" + d.property + ")"})
+                .attr("style", function(d) {
+                    /*return "fill: url(#pattern_" + d.property + ")";*/
+                    return "fill: #fff";
+                })
                 .attr("class", function(d) {return "node" + d.label;})
                 .attr("onclick", function(d) {return "showDetails(" + d.index + ")"})
                 .call(d3.drag()
@@ -139,9 +142,12 @@ var graph_div = new Vue({
                 .data(graph.nodes)
                 .enter()
                 .append("text")
-                .attr("x", -21)
-                .attr("y", 60)
-                .text(function(d) {return d.property;});
+                .attr("x", -25)
+                .attr("y", -25)
+                .text(function(d) {
+                    if (d.label == "Enzyme")
+                        return d.property;
+                    return d.name;});
         },
     },
     methods: {

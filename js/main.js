@@ -202,15 +202,15 @@ var search = new Vue({
             this.msgSeNaoEncontrado = "⚠ Pathway from " + this.compostoOrigem.nome + " to " + this.compostoFinal.nome;
 
             if (this.organismoSelecionado.id == 0) {
-                body["query"] =  "MATCH q=(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE ID(c1) = "
-                + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
+                body["query"] = "MATCH q=SHORTESTPATH((n1:Compound)-[*]->(n2:Compound)) WHERE ID(n1) = "
+                + this.compostoOrigem.id +" AND ID(n2) = "+ this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
 
                 this.msgSeNaoEncontrado += " not found in any organism ⚠";
             } else {
-                body["query"] = "MATCH q=(t:Taxonomy)-[*]->(c1:Compound)-[:SUBSTRATE_FOR|PRODUCT_OF*]->(c2:Compound) WHERE " + 
-                "t.taxId = \"" + this.organismoSelecionado.id + "\" AND ID(c1) = "
-                + this.compostoOrigem.id + " AND ID(c2) = " + this.compostoFinal.id
+                body["query"] = "MATCH q=SHORTESTPATH((t:Taxonomy)-[*]->(n1:Compound)-[*]->(n2:Compound)) WHERE "
+                + "t.taxId = \"" + this.organismoSelecionado.id + "\" ID(n1) = "
+                + this.compostoOrigem.id +" AND ID(n2) = "+ this.compostoFinal.id
                 + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links";
 
                 this.msgSeNaoEncontrado += " not found on organism " + this.organismoSelecionado.nome + " ⚠";
