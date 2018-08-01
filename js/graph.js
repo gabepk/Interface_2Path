@@ -87,6 +87,7 @@ var graph_div = new Vue({
                 .append("path")
                 .attr("d", "M0,-4L8,-3L1,02");
 
+                
             /*this.svg.append("defs").selectAll("marker")
                 .data(graph.nodes)
                 .enter()
@@ -108,6 +109,16 @@ var graph_div = new Vue({
                     return "";
                 });*/
 
+
+            this.svg.append("defs")
+                .append("clipPath")
+                .attr("id", "clipText")
+                .append("circle")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", 43);
+
+
             this.path = this.svg.append("g")
                 .selectAll("path")
                 .data(graph.links)
@@ -127,10 +138,6 @@ var graph_div = new Vue({
                 .attr("cx", 0)
                 .attr("cy", 0)
                 .attr("r", 45)
-                .attr("style", function(d) {
-                    /*return "fill: url(#pattern_" + d.property + ")";*/
-                    return "fill: #fff";
-                })
                 .attr("class", function(d) {return "node" + d.label;})
                 .attr("onclick", function(d) {return "showDetails(" + d.index + ")"})
                 .call(d3.drag()
@@ -142,8 +149,13 @@ var graph_div = new Vue({
                 .data(graph.nodes)
                 .enter()
                 .append("text")
-                .attr("x", -25)
-                .attr("y", -25)
+                .attr("clip-path", "url(#clipText)")
+                .attr("x", function(d) {
+                    if (d.label == "Enzyme")
+                        return -15; // centraliza
+                    return -40;
+                })
+                .attr("y", 0)
                 .text(function(d) {
                     if (d.label == "Enzyme")
                         return d.property;
