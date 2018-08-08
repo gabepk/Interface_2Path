@@ -290,6 +290,15 @@ var search = new Vue({
 
                 // Atualiza grafico
                 graph_div.graph = {nodes: nodes, links: links};
+                
+                // Limpa campos
+                vm.enzimaSelecionada = "";
+                vm.compostoOrigem = {};
+                vm.compostoOrigemNome = "";
+                vm.compostoFinal = {};
+                vm.compostoFinalNome = "";
+                vm.organismoSelecionado = {};
+                document.getElementById("input-organism-nome").value = "";
 
             }).catch(function(error) {
                 console.log(error);

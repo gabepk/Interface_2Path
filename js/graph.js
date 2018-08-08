@@ -79,15 +79,16 @@ var graph_div = new Vue({
                 .append("marker")
                 .attr("id", function(d) {return d;})
                 .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 28)
-                .attr("refY", -5)
+                .attr("refX", 17)
+                .attr("refY", -2)
                 .attr("markerWidth", 15)
                 .attr("markerHeight", 15)
                 .attr("orient", "auto")
                 .append("path")
-                .attr("d", "M0,-4L8,-3L1,02");
+                .attr("d", "M0,-4L8,-2L1,02");
 
                 
+            // Imagem no background do no
             /*this.svg.append("defs").selectAll("marker")
                 .data(graph.nodes)
                 .enter()
@@ -109,15 +110,14 @@ var graph_div = new Vue({
                     return "";
                 });*/
 
-
+            /*
             this.svg.append("defs")
                 .append("clipPath")
                 .attr("id", "clipText")
-                .append("circle")
-                .attr("cx", 0)
-                .attr("cy", 0)
-                .attr("r", 43);
-
+                .append("rect")
+                .attr("width", 40)
+                .attr("height", 40);
+                */
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -137,7 +137,7 @@ var graph_div = new Vue({
                 .append("circle")
                 .attr("cx", 0)
                 .attr("cy", 0)
-                .attr("r", 45)
+                .attr("r", 20)
                 .attr("class", function(d) {return "node" + d.label;})
                 .attr("onclick", function(d) {return "showDetails(" + d.index + ")"})
                 .call(d3.drag()
@@ -149,17 +149,22 @@ var graph_div = new Vue({
                 .data(graph.nodes)
                 .enter()
                 .append("text")
-                .attr("clip-path", "url(#clipText)")
+                //.attr("clip-path", "url(#clipText)")
                 .attr("x", function(d) {
-                    if (d.label == "Enzyme")
-                        return -15; // centraliza
-                    return -40;
+                    if (d.label != "Enzyme") {
+                        if (d.name.length > 20) return "-45";
+                        else return -2.5 * d.name.length; // centraliza texto
+                    } else {
+                        return -2.5 * d.property.length;
+                    }
                 })
-                .attr("y", 0)
+                .attr("y", 25)
                 .text(function(d) {
                     if (d.label == "Enzyme")
                         return d.property;
-                    return d.name;});
+                    
+                    if (d.name.length <= 17) return d.name;
+                    else return d.name.slice(0, 17) + "..." });
         },
     },
     methods: {
@@ -174,7 +179,7 @@ var graph_div = new Vue({
         linkArc(d) {
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
-                dr = Math.sqrt(dx * dx + dy * dy);
+                dr = Math.sqrt(dx * dx + dy * dy) + 300;
             return "M" + d.source.x + "," + d.source.y + 
                     "A" + dr + "," + dr + " 0 0,1 " + 
                     d.target.x + "," + d.target.y;
