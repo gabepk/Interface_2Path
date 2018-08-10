@@ -2,7 +2,7 @@ var graph_div = new Vue({
     el: '#graph-div',
     data: {
         graph: {nodes: [], links: []},
-        width: 1024,
+        width: 1200,
         height: 600,
         svg: '',
         simulation: '',
@@ -60,10 +60,10 @@ var graph_div = new Vue({
             this.simulation = d3.forceSimulation()
                 .force("link", d3.forceLink()
                         .id(function(d) { return d.id; })
-                        .distance(250)
-                        .strength(1))
+                        .distance(150)
+                        .strength(2))
                 .force("collide",d3.forceCollide(75))
-                .force("center", d3.forceCenter(this.width / 2.4, this.height / 2.4));
+                .force("center", d3.forceCenter(this.width / 2, this.height / 2));
 
             this.simulation
                 .nodes(graph.nodes)
@@ -88,7 +88,7 @@ var graph_div = new Vue({
                 .attr("d", "M0,-4L8,-2L1,02");
 
                 
-            // Imagem no background do no
+            // Imagem no background do node
             /*this.svg.append("defs").selectAll("marker")
                 .data(graph.nodes)
                 .enter()
@@ -109,15 +109,6 @@ var graph_div = new Vue({
                     }
                     return "";
                 });*/
-
-            /*
-            this.svg.append("defs")
-                .append("clipPath")
-                .attr("id", "clipText")
-                .append("rect")
-                .attr("width", 40)
-                .attr("height", 40);
-                */
 
             this.path = this.svg.append("g")
                 .selectAll("path")
@@ -165,6 +156,9 @@ var graph_div = new Vue({
                     
                     if (d.name.length <= 17) return d.name;
                     else return d.name.slice(0, 17) + "..." });
+                
+                // Mostra painel sem conteudo
+                showDetails(-1);
         },
     },
     methods: {

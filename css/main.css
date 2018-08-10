@@ -9,6 +9,14 @@ p {
     margin-left: 1%;
 }
 
+
+.msg-grafo-interativo {
+    width: 98%;
+    margin: 8px;
+    color: #00427e;
+    text-align: center;
+}
+
 [v-cloak] {
     display: none;
 }
@@ -192,13 +200,13 @@ p {
 
 #graph-div #node-label {
     transition: width .5s ease-in;
-    width: 200px;
+    width: 250px;
     height: 400px;
-    position: absolute;
+    position: fixed;
     background: #00427e;
     box-shadow: 1px 1px 10px 0px #888;
     z-index: 9;
-    margin-top: -200px;
+    top: 100px;
     border: 1px solid #2671b5;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -247,6 +255,8 @@ p {
     text-align: center;
     color: #eee;
     padding: 30px;
+    margin-top: 120px;
+    font-size: 16px;
 }
 
 #graph-div #graph-view {

@@ -4,8 +4,10 @@
     <link rel="shortcut icon" type="image/x-icon"
           href="img/favicon.ico"/>
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-vue.css"/>
     <link type="text/css" rel="stylesheet" href="css/main.css"/>
-    <title>Home</title>
+
+    <title>Search</title>
 </head>
 <body>
 
@@ -17,55 +19,126 @@
         </div>
         <nav class="navbar">
             <a class="navbar-brand chosen-menu" href="#">Home</a>
-            <a class="navbar-brand" href="search.html">Search</a>
+            <a class="navbar-brand" href="about.html">About</a>
             <a class="navbar-brand" href="help.html">Help</a>
         </nav>
     </div>
 </header>
 
-<!-- CONTENT -->
-<div class="container" style="margin-top: 20px">
-    <h2>2Path</h2>
-    <p>2Path is a family of terpenoid metabolic network databases created on demand from a public workflow for <i>in silico</i> metabolic network reconstruction.</p>
-    <ul>
-        <li><a href="http://www.biomol.unb.br/2path">2Path</a> is database that integrates data in reaction level from several repositories of plant metabolism, filtering for terpenoid data.
-        </li>
-        <li><a href="https://bitbucket.org/wmcs/2path15"><img src="img/2path15.png" alt="2path15" height="20px"></a> is a workflow comprising a graph graph database to store <i>in silico</i> reconstructed networks for plant sesquiterpenes in chemical mechanism level.
-        </li>
-    </ul>
+<h3 class="msg-grafo-interativo">2 Path Database Interface</h3>
+<h6 class="msg-grafo-interativo">The Interactive Graph</h6>
 
-    <h2>Terpenoids</h2>
-    <p>Terpenoids have critical ecological, industrial and commercial
-        relevance. Interactions as signaling for communication intra/inter
-        species, signal molecules to attract pollinating insects, or defense
-        against herbivores and microbes, are protagonized by terpenoids. Due
-        to their chemical composition, many terpenoids possess vast
-        pharmacological applicability in medicine and biotechnology. The
-        biosynthesis of terpenes has been widely studied over the years and
-        today it is known that they can be synthesized from two metabolic
-        pathways: Mevalonate pathway (MVA) and Non-mevalonate pathway (MEP).
-    </p>
-    <h2>Publications</h2>
-    <a href="http://ieeexplore.ieee.org/document/7822709" target="_blank">
-        Silva, W., Vilar, D., Souza, D., Walter, M. E., Brígido, M., & Holanda, M. (2016). 2Path: A terpenoid
-        metabolic network modeled as graph database. In Bioinformatics and Biomedicine (BIBM), 2016 IEEE International
-        Conference on (pp. 1322-1327). IEEE.
-    </a>
-    <br/>
-    <br/>
-    <a href="http://www.inderscience.com/info/inarticle.php?artid=86103" target="_blank">
-        Silva, W. M. C. D., Vilar, D. J., Souza, D. D. S., Walter, M. E. M. T., Holanda, M. T. D., & Brígido, M. D. M.
-        (2017). A terpenoid metabolic network modelled as graph database. International Journal of Data Mining and
-        Bioinformatics, 18(1), 74-90.
-    </a>
-    <br/>
-    <br/>
-    <a href="https://link.springer.com/chapter/10.1007/978-3-319-77712-2_95" target="_blank">
-        Esteves, G., Silva, W., Walter, M. E., Brigido, M., & Lima, F. (2018). Human-Computer Interaction
-        Communicability Evaluation Method Applied to Bioinformatics. In World Conference on Information Systems and
-        Technologies (pp. 1001-1008). Springer.
-    </a>
-    <!--<a class="navbar-brand" href="about.html">View details</a>-->
+<div id="search">
+    <!-- SIDE MENU -->
+    <div v-cloak id="search-side-menu" style="display:flex;flex-flow: row wrap;">
+        <div v-cloak class="search-filters-1">
+            <span class="title">Choose the organism</span>
+            <input id="input-organism-nome" list="datalist-organisms" placeholder="All Organisms">
+            <datalist id="datalist-organisms">
+                <option>All Organisms</option>
+                <option v-for="organismo in organismoLista">
+                    {{organismo.nome}}
+                </option>
+            </datalist>
+            <button @click="showSearchEnzyme">Search Enzyme →</button>
+            <button @click="showSearchPathway">Search Pathway →</button>
+        </div>
+        <div id="search-enzyme-menu" class="search-filters-2">
+            <span class="title">Search Enzyme</span>
+            <div class="flex-row">
+                <span class="label">EC:</span>
+                    <input id="input-enzyme" placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
+            </div>
+            <button @click="searchEnzyme">Search 🔎</button>
+        </div>
+        <div id="search-pathway-menu" class="search-filters-2">
+            <span class="title">Search Pathway</span>
+            <div>
+                <div class="flex-row">
+                    <span class="label">From:</span>
+                    <input id="input-compound-origem-nome" list="datalist-compound-origem" 
+                    placeholder="Origin Compound" v-model="compostoOrigemNome">
+                </div>
+                <datalist id="datalist-compound-origem">
+                    <option v-for="compound in compostoOrigemLista" 
+                        :data-id="compound.id" :value="compound.compoundName"></option>
+                </datalist>
+            </div>
+            <div>
+                <div class="flex-row">
+                    <span class="label">From:</span>
+                    <input id="input-compound-final-nome" list="datalist-compound-final" 
+                    placeholder="Final Compound" v-model="compostoFinalNome">
+                </div>
+                <datalist id="datalist-compound-final">
+                    <option v-for="compound in compostoFinalLista" 
+                        :data-id="compound.id" :value="compound.compoundName"></option>
+                </datalist>
+            </div>
+            <button @click="searchPathway">Search 🔎</button>
+        </div>
+    </div>
 </div>
+
+<!-- GRAFO PRINCIPAL -->
+<div id="graph-div">
+    <div id="node-label" style="width:16px">
+        <div class="botao-detalhes" @click="togglePainel()"></div>
+        <div id="msgs-painel">
+            <div v-if="ifNodeWasSelected == true" class="painel-detalhes">
+                <div style="text-align: center;">
+                    <p>{{selectedNode.label}}</p>
+                    <p>{{selectedNode.name}}</p>
+                </div>
+                <div style="display: flex;flex-flow: row wrap;">
+                    <p><i>{{selectedNode.property_name}}</i>:</p>
+                    <p>{{selectedNode.property}}</p>
+                </div>
+                <div v-if="selectedNode.property2_name != ''" style="display: flex;flex-flow: row wrap;">
+                    <p><i>{{selectedNode.property2_name}}</i>:</p>
+                    <p>{{selectedNode.property2}}</p>
+                </div>
+                <div v-if="selectedNode.label === 'Compound'"  style="text-align: center;">
+                    <img width="220" height="auto" :src="'https://www.kegg.jp/Fig/compound/'+selectedNode.property+'.gif'">
+                    <a :href="'https://www.kegg.jp/dbget-bin/www_bget?cpd:'+selectedNode.property"
+                        target="_blank"><u>More details on kegg.jp</u> <span>⎘</span></a>
+                </div>
+                <a v-if="selectedNode.label == 'Enzyme'"
+                    :href="'https://www.genome.jp/dbget-bin/www_bget?ec:'+selectedNode.property"
+                    target="_blank"><u>More details on genome.jp</u> <span>⎘</span></a>
+            </div>
+            <div v-else>
+                <p class="node-nao-selecionado">⚠<br/>Select a compound to see its details</p>
+            </div>
+        </div>
+    </div>
+
+    <svg id="graph-view">
+        <div id="loader-graph">
+            <img src="img/loading.gif">
+        </div>
+        <div id="container-msg-erro">
+            <p v-cloak v-if="grafoEncontrado == false" id="msg-erro">
+                {{msgSeNaoEncontrado}}
+            </p>
+        </div>
+
+    </svg>
+</div>
+
+
+<!-- libs -->
+<script src="js/vue.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/polyfill.min.js"></script>
+<script src="js/bootstrap-vue.js"></script>
+<script src="js/d3.v4.min.js"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+
+<!-- controllers -->
+<script src="js/graph.js"></script>
+<script src="js/main.js"></script>
+
+
 </body>
 </html>
