@@ -25,8 +25,7 @@
     </div>
 </header>
 
-<h3 class="msg-grafo-interativo">2 Path Database Interface</h3>
-<h6 class="msg-grafo-interativo">The Interactive Graph</h6>
+<h4 class="msg-grafo-interativo">2Path: a terpenoid metabolic network modeled as graph database</h4>
 
 <div id="search">
     <!-- SIDE MENU -->
@@ -47,7 +46,7 @@
             <span class="title">Search Enzyme</span>
             <div class="flex-row">
                 <span class="label">EC:</span>
-                    <input id="input-enzyme" placeholder="0.0.0.0" v-model="enzimaSelecionada"/>
+                    <input id="input-enzyme" placeholder="2.5.1.92" v-model="enzimaSelecionada"/>
             </div>
             <button @click="searchEnzyme">Search 🔎</button>
         </div>
@@ -57,7 +56,7 @@
                 <div class="flex-row">
                     <span class="label">From:</span>
                     <input id="input-compound-origem-nome" list="datalist-compound-origem" 
-                    placeholder="Origin Compound" v-model="compostoOrigemNome">
+                    placeholder="Source Compound" v-model="compostoOrigemNome">
                 </div>
                 <datalist id="datalist-compound-origem">
                     <option v-for="compound in compostoOrigemLista" 
@@ -68,7 +67,7 @@
                 <div class="flex-row">
                     <span class="label">From:</span>
                     <input id="input-compound-final-nome" list="datalist-compound-final" 
-                    placeholder="Final Compound" v-model="compostoFinalNome">
+                    placeholder="Target Compound" v-model="compostoFinalNome">
                 </div>
                 <datalist id="datalist-compound-final">
                     <option v-for="compound in compostoFinalLista" 
