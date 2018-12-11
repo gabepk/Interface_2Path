@@ -2,7 +2,7 @@ English/[Português](https://gitlab.com/gabepk.ape/Interface_2Path/blob/master/R
 
 # The 2Path Database
 
-[2Path](http://www.biomol.unb.br/2pat) is a family of terpenoid metabolic network databases (Neo4j) created on demand from a public workflow for *in silico* metabolic network reconstruction.
+[2Path](http://www.biomol.unb.br/2path) is a family of terpenoid metabolic network databases (Neo4j) created on demand from a public workflow for *in silico* metabolic network reconstruction.
 
 The purpose of this project is to work as an interface to the database, so that the user is able to search for specific enzymes and metabolic pathways between compounds.
 
