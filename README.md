@@ -9,7 +9,8 @@ The purpose of this project is to work as an interface to the database, so that 
 # NoSQL database
 
 NoSQL databases are an alternative to the tradition RDBMS to handle big data effectively. When relational databases started facing issues related to large scaling and high-concurrency, 
-NoSQL database brought flexibility in different sorts of formats, such as key-value, document, graph, etc. Each format has its own characteristics, potentials and drawbacks. 
+NoSQL database brought flexibility in different sorts of formats, such as key-value, document, graph, etc. Each format has its own characteristics, advantages and drawbacks.
+
 The 2path was build as a NoSQL database, more specificaly a graph database, due to the large amount of data it contains.
 
 # Graph database
@@ -17,6 +18,7 @@ The 2path was build as a NoSQL database, more specificaly a graph database, due 
 A graph database is focused not only on the data, but also on the relationships, since the connections are stored alongside the data in the model. Therefore, in this kind of 
 database, it's much easier to apply a graph traversal algorithm to search for an specific data or a pathway between datas. 
 If we were to perform the same in RDBMS, we would have to apply several JOIN operations to locate a desired dataset between Many-to-One or Many-to-Many relationships.
+
 The 2path was build as a graph database, more specificaly a Neo4j DB, because one of its main goal is to search the relationships between two compounds in an organism, which could have 
 several other compounds in between. It's like searching for the history of a single compund in one organism.
 
@@ -28,7 +30,7 @@ These are some queries we've used on this interface project:
 * `"MATCH (c:Compound) WHERE toLower(c.compoundName) CONTAINS toLower(" + compostoSTR + ") RETURN c LIMIT 20"`
   * Finds at most 20 compounds which contains the string `compostoSTR` in its attribute called `compoundName`
 * `"MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId =  + this.organismoSelecionado.id +  AND e.enzymeEC =  + this.enzimaSelecionada + " RETURN e"`
-  * Finds an enzyme which has at least one connection with an specific taxonomy, where the enzyme's EC number is exactely the value of the variable `this.enzimaSelecionada`. 
+  * Finds an enzyme which has at least one connection with an specific taxonomy, where the enzyme's EC number is exactly the value of the variable `this.enzimaSelecionada`. 
 * `"MATCH q=SHORTESTPATH((n1:Compound)-[*]->(n2:Compound)) WHERE ID(n1) = " + this.compostoOrigem.id + " AND ID(n2) = " + this.compostoFinal.id + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links"`
   * Finds a the shortest path between two specifics compunds (with given ids) and return a graph without node repetition, where nodes are labeled as "nodes" and relationships are labeled as "links".
 
