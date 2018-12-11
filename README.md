@@ -6,6 +6,26 @@ English/[Português](https://gitlab.com/gabepk.ape/Interface_2Path/blob/master/R
 
 The purpose of this project is to work as an interface to the database, so that the user is able to search for specific enzymes and metabolic pathways between compounds.
 
+# NoSQL database
+
+NoSQL databases are an alternative to the tradition RDBMS to handle big data effectively. When relational databases started facing issues related to large scaling and high-concurrency, 
+NoSQL database brought flexibility in different sorts of formats, such as key-value, document, graph, etc. Each format has its own characteristics, potentials and drawbacks. 
+The 2path was build as a NoSQL database, more specificaly a graph database, due to the large amount of data it contains.
+
+# Graph database
+
+A graph database is focused not only on the data, but also on the relationships, since the connections are stored alongside the data in the model. Therefore, in this kind of 
+database, it's much easier to apply a graph traversal algorithm to search for an specific data or a pathway between datas. 
+If we were to perform the same in RDBMS, we would have to apply several JOIN operations to locate a desired dataset between Many-to-One or Many-to-Many relationships.
+The 2path was build as a graph database, more specificaly a Neo4j DB, because one of its main goal is to search the relationships between two compounds in an organism, which could have 
+several other compounds in between. It's like searching for the history of a single compund in one organism.
+
+# Neo4j
+
+
+
+
+
 # Publications (2Path Interface)
 
 * We've used a Communication Evaluation Method to measure the quality of the interface from the perspective of the users. The research has been submited and accepted as a full paper by the World Conference on Information Systems and Tecnologies (WorldCist) in 2018.
