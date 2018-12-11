@@ -10,34 +10,34 @@ O propósito deste projeto é servir como interface para o banco de dados, de fo
 
 Bancos de dados NoSQL são uma alternativa ao modelo relacional tradicional para manipular grande número de dados de maneira eficiente. Quando o modelo relacional começou a 
 enfrentar prblemas relacionados a escalabilidade e concorrência, os modelos não relacionais trouxeram flexibilidade em diferentes formatos, tais como chave-valor, documento, grafos, etc.
-Cada formato possui suas características, vantagens e desvantages. O 2Path foi construído como um banco de dados NoSQL, mais especificamente um ....
+Cada formato possui suas características, vantagens e desvantages.
 
+O 2Path foi construído como um banco de dados NoSQL, mais especificamente um formato de grafo, por conta da grande quantidade de dados biológicos que possui.
 
-NoSQL databases are an alternative to the tradition RDBMS to handle big data effectively. When relational databases started facing issues related to large scaling and high-concurrency, 
-NoSQL database brought flexibility in different sorts of formats, such as key-value, document, graph, etc. Each format has its own characteristics, potentials and drawbacks. 
-The 2path was build as a NoSQL database, more specificaly a graph database, due to the large amount of data it contains.
+# Bando de dados em grafo
 
-# Graph database
+Este tipo de banco é focado não só nos dados, mas também nas relações entre eles, uma vez que as conexões são armazenadas junto com os dados no modelo. Portanto, fica muito 
+mais simples aplicar um algoritmo de travessia em grafo para buscar um dado específico (nó) ou um caminho entre dois dados (nós). Se fôssemos buscar a mesma informação de 
+maneira parecida em um banco de dados relacional, precisaríamos realizar várias operações de JOIN para localizar um conjunto de dados específico por entre as relações de 
+Many-to-One e Many-to-Many.
 
-A graph database is focused not only on the data, but also on the relationships, since the connections are stored alongside the data in the model. Therefore, in this kind of 
-database, it's much easier to apply a graph traversal algorithm to search for an specific data or a pathway between datas. 
-If we were to perform the same in RDBMS, we would have to apply several JOIN operations to locate a desired dataset between Many-to-One or Many-to-Many relationships.
-The 2path was build as a graph database, more specificaly a Neo4j DB, because one of its main goal is to search the relationships between two compounds in an organism, which could have 
-several other compounds in between. It's like searching for the history of a single compund in one organism.
+O 2path foi construído como um banco de dados em grafo, utilizando o Neo4j mais especificamente, porque um dos seus objetivos é justamente buscar pelo menor caminho entre 
+dois compostos biológicos em um organismo, e este caminho pode conter inúmeros outros compostos. Em outras palavras, é como se estivéssemos buscando a história de um composto 
+biológico.
 
 # Neo4j
 
-Neo4j is an intuitive graph database, with it's own query language called Cypher. Their model have basically nodes and relationships. Nodes can have key-values attributes, labels
-and a set o possible relationships.
-These are some queries we've used on this interface project:
+O Neo4j é um banco de dados em grafo bastante intuitivo, com sua própria linguague query chamada Cypher. Seu modelo possui basicamente suas estruturas: o nó e aresta. Os nós 
+podem ter atributos do tipo chave-valor, labels e um conjunto de possíveis tipos de arestas. As arestas também podem possuir labels e um conjunto de possível nós de entrada e de saída.
+ Estes são algumas as queries em Cypher que foram usadas neste projeto:
+ 
 * `"MATCH (c:Compound) WHERE toLower(c.compoundName) CONTAINS toLower(" + compostoSTR + ") RETURN c LIMIT 20"`
-  * Finds at most 20 compounds which contains the string `compostoSTR` in its attribute called `compoundName`
+  * Encontra no máximo 20 compostos que contém a string `compostoSTR` em seu atributo chamado `compoundName`;
 * `"MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId =  + this.organismoSelecionado.id +  AND e.enzymeEC =  + this.enzimaSelecionada + " RETURN e"`
-  * Finds an enzyme which has at least one connection with an specific taxonomy, where the enzyme's EC number is exactely the value of the variable `this.enzimaSelecionada`. 
+  * Encontra uma enzima a qual possui pelo menos uma conexão (com 0 ou mais nós entre eles) com uma taxonomia específica, tal que o número EC desta enzima deve ser 
+    igual ao valor da variável `this.enzimaSelecionada`; 
 * `"MATCH q=SHORTESTPATH((n1:Compound)-[*]->(n2:Compound)) WHERE ID(n1) = " + this.compostoOrigem.id + " AND ID(n2) = " + this.compostoFinal.id + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links"`
-  * Finds a the shortest path between two specifics compunds (with given ids) and return a graph without node repetition, where nodes are labeled as "nodes" and relationships are labeled as "links".
-
-
+  * Encontra o menor caminho entre dois compostos específicos e retorna um grafo sem nós repetidos, onde os nós são chamados de "nodes" e as arestas de "links" no retorno da query.
 
 # Publicações (Interface do 2Path)
 
