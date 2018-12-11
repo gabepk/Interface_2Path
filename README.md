@@ -22,12 +22,20 @@ several other compounds in between. It's like searching for the history of a sin
 
 # Neo4j
 
-
+Neo4j is an intuitive graph database, with it's own query language called Cypher. Their model have basically nodes and relationships. Nodes can have key-values attributes, labels
+and a set o possible relationships.
+These are some queries we've used on this interface project:
+* `"MATCH (c:Compound) WHERE toLower(c.compoundName) CONTAINS toLower(" + compostoSTR + ") RETURN c LIMIT 20"`
+  * Finds at most 20 compounds which contains the string `compostoSTR` in its attribute called `compoundName`
+* `"MATCH q=(t:Taxonomy)-[*]->(e:Enzyme) WHERE t.taxId =  + this.organismoSelecionado.id +  AND e.enzymeEC =  + this.enzimaSelecionada + " RETURN e"`
+  * Finds an enzyme which has at least one connection with an specific taxonomy, where the enzyme's EC number is exactely the value of the variable `this.enzimaSelecionada`. 
+* `"MATCH q=SHORTESTPATH((n1:Compound)-[*]->(n2:Compound)) WHERE ID(n1) = " + this.compostoOrigem.id + " AND ID(n2) = " + this.compostoFinal.id + " RETURN DISTINCT(nodes(q)) as nodes, relationships(q) as links"`
+  * Finds a the shortest path between two specifics compunds (with given ids) and return a graph without node repetition, where nodes are labeled as "nodes" and relationships are labeled as "links".
 
 
 
 # Publications (2Path Interface)
 
-* We've used a Communication Evaluation Method to measure the quality of the interface from the perspective of the users. The research has been submited and accepted as a full paper by the World Conference on Information Systems and Tecnologies (WorldCist) in 2018.
+We've used a Communication Evaluation Method to measure the quality of the interface from the perspective of the users. The research has been submited and accepted as a full paper by the World Conference on Information Systems and Tecnologies (WorldCist) in 2018.
 
 [Esteves, G., Silva, W., Walter, M. E., Brigido, M., & Lima, F. (2018). Human-Computer Interaction Communicability Evaluation Method Applied to Bioinformatics. In World Conference on Information Systems and Technologies (pp. 1001-1008). Springer.](https://link.springer.com/chapter/10.1007/978-3-319-77712-2_95)
