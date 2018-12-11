@@ -6,7 +6,7 @@ Português/[English](https://gitlab.com/gabepk.ape/Interface_2Path/blob/master/R
 
 O propósito deste projeto é servir como interface para o banco de dados, de forma que o usuário seja capaz de pesquisar por uma enzima específica e por um caminho metabólico entre dois compostos.
 
-# Publications (2Path Interface)
+# Publicações (Interface do 2Path)
 
 * Nós utilizamos o Método de Avaliação de Comunicabilidade para medir a qualidade da interface a partir da perspectiva do usuário. A pesquisa foi submetida e aceita como um full paper pelo World Conference on Information Systems and Tecnologies (WorldCist) in 2018.
 
