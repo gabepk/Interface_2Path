@@ -2,7 +2,7 @@ Português/[English](https://gitlab.com/gabepk.ape/Interface_2Path/blob/master/R
 
 # O Banco de Dados 2Path
 
-[2Path](http://www.biomol.unb.br/2pat) é um banco de dados (Neo4j) de uma família de redes metabólicas de terpenóides, criada sob demanda a partir de um workflow público para a reconstrução da rede metabolica *in silico*.
+[2Path](http://www.biomol.unb.br/2path) é um banco de dados (Neo4j) de uma família de redes metabólicas de terpenóides, criada sob demanda a partir de um workflow público para a reconstrução da rede metabolica *in silico*.
 
 O propósito deste projeto é servir como interface para o banco de dados, de forma que o usuário seja capaz de pesquisar por uma enzima específica e por um caminho metabólico entre dois compostos.
 
