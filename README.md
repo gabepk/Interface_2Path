@@ -1,4 +1,4 @@
-English/[Português](https://gitlab.com/gabepk.ape/Interface_2Path/blob/master/README.pt.md)
+English/[Português](https://github.com/gabepk/Interface_2Path/blob/master/README.pt.md)
 
 # The 2Path Database
 
